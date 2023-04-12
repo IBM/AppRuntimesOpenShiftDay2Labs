@@ -1,6 +1,6 @@
 # App Runtimes OpenShift Day 2 Labs
 
-Welcome to the App Runtimes OpenShift Day 2 Labs. These labs will help familiarize you with OpenShift, Kubernetes, containers, and common "Day 2" operations and problem determination for WebSphere deployments.
+Welcome to the App Runtimes OpenShift Day 2 Labs. These labs will help familiarize you with OpenShift, Kubernetes, containers, and common "Day 2" operations and problem determination for WebSphere Liberty deployments.
 
 The phrase “Day 2" refers to ongoing operations and maintenance of deployed applications whereas “Day 1” refers to installation, configuration, and application deployment.
 
