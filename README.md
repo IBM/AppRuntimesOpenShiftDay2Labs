@@ -1,4 +1,8 @@
-# AppRuntimesOpenShiftDay2Labs
+# App Runtimes OpenShift Day 2 Labs
+
+## Labs
+
+View the labs at <https://ibm.github.io/AppRuntimesOpenShiftDay2Labs/>
 
 ## Development
 
