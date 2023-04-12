@@ -17,6 +17,7 @@ nav:
     - 'Pipelines': lab_pipelines.md
   - 'Appendix':
     - 'End of labs': appendix.md
+    - 'Support': lab_support.md
     - 'Frequently Asked Questions': faq.md
     - 'Install Sample Liberty Application': lab_liberty_install_app.md
     - 'Uninstall Sample Liberty Application': lab_liberty_uninstall_app.md
