@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: hello
+spec:
+  params:
+    - default: Hello Tekton
+      name: greeting
+      type: string
+  steps:
+    - image: registry.redhat.io/ubi7/ubi-minimal
+      name: 'sayhello'
+      resources: {}
+      script: |
+        #!/bin/sh
+        echo "$(params.greeting)"  

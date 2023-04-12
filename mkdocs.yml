@@ -1,0 +1,40 @@
+site_name: App Runtimes OpenShift Labs
+#repo_url: https://github.com/IBM/AppRuntimesOpenShiftDay2Labs
+nav:
+  - 'Home': index.md
+  - 'OpenShift Fundamentals':
+    - 'Kubernetes basics': lab_basics_containers.md
+  - 'WebSphere Liberty on OpenShift':
+    - 'Application logs': lab_liberty_applogs.md
+    - 'Diagnostic trace': lab_liberty_diagnostic_trace.md
+    - 'High CPU': lab_liberty_high_cpu.md
+    - 'High response times': lab_liberty_high_http_response_times.md
+    - 'Application errors': lab_liberty_application_errors.md
+    - 'Java OutOfMemoryErrors': lab_liberty_java_oome.md
+    - 'InstantOn': lab_liberty_instanton.md
+  - 'General OpenShift Topics':
+    - 'Health of the cluster': lab_basics_openshift_health.md
+    - 'Pipelines': lab_pipelines.md
+  - 'Appendix':
+    - 'End of labs': appendix.md
+    - 'Frequently Asked Questions': faq.md
+    - 'Install Sample Liberty Application': lab_liberty_install_app.md
+    - 'Uninstall Sample Liberty Application': lab_liberty_uninstall_app.md
+    - 'Lab cluster administration': lab_administration.md
+theme:
+  name: readthedocs
+  titles_only: True
+  highlightjs: False
+  prev_next_buttons_location: bottom
+markdown_extensions:
+  - attr_list
+  - extra
+extra_css:
+  - css/extra.css
+extra_javascript:
+  - js/popper.min.js
+  - js/tippy-bundle.umd.js
+  - js/clipboard.js
+  - js/extra.js
+hooks:
+  - mkhooks.py

@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: goodbye
+spec:
+  steps:
+    - image: registry.redhat.io/ubi7/ubi-minimal
+      name: goodbye
+      resources: {}
+      script: |
+        #!/bin/sh
+        echo "Goodbye"
