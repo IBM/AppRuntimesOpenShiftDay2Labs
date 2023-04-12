@@ -16,4 +16,4 @@ There are a total of 9 labs that may be performed in sequence or independently a
 
 ## Support
 
-These labs are provided as is without any warranty or formatl support; however, please report any issues through the [GitHub repository](https://github.com/IBM/AppRuntimesOpenShiftDay2Labs/issues) and we'll try to resolve any issues as time permits.
+These labs are provided as is without any warranty or formal support; however, please report any issues through the [GitHub repository](https://github.com/IBM/AppRuntimesOpenShiftDay2Labs/issues) and we'll try to resolve any issues as time permits.
