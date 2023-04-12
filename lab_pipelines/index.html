@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Pipelines - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Pipelines";
+        var mkdocs_page_input_path = "lab_pipelines.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>General OpenShift Topics &raquo;</li>
+      <li>Pipelines</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="openshift-pipelines">OpenShift Pipelines</h1>
+<p>OpenShift pipelines is a continuous integration and delivery (CI/CD) solution based on the Tekton open source project. </p>
+<h2 id="installing-openshift-pipelines">Installing Openshift Pipelines</h2>
+<p>OpenShift Pipelines is provided as an add-on on top of OpenShift that can be installed via an operator available in the OpenShift OperatorHub.  </p>
+<h3 id="install-the-openshift-pipelines-operator-from-operator-hub">Install the OpenShift Pipelines Operator from Operator Hub</h3>
+<p>If the operator is not already available, it can be installed via OperatorHub. </p>
+<ol>
+<li>In the OpenShift Console, expand 'Operators' and select 'Installed Operators':<br />
+<img alt="" src="../images/installedOperator.png" /></li>
+<li>Check that 'OpenShift Pipelines' is included in the list of installed operators:<br />
+<img alt="" src="../images/pipelineOperator.png" /></li>
+<li>If the operator is not installed, click on OperatorHub.</li>
+<li>In the search box, enter 'pipelines'</li>
+<li>Click on 'RedHat OpenShift Pipelines'</li>
+<li>Click the 'Install' button</li>
+</ol>
+<h2 id="openshift-pipelinestekton-concepts">OpenShift Pipelines/Tekton concepts</h2>
+<p>Tekton defines a number of Kubernetes custom resources as building blocks in order to standardize pipeline concepts and provide a terminology that is consistent across CI/CD solutions. These custom resources are an extension of the Kubernetes API that let users create and interact with these objects using kubectl and other Kubernetes tools.</p>
+<p>The custom resources needed to define a pipeline are listed below:</p>
+<ul>
+<li>Task: a reusable, loosely coupled number of steps that perform a specific task (e.g. building a container image)</li>
+<li>Pipeline: the definition of the pipeline and the Tasks that it should perform</li>
+<li>PipelineResource: inputs (e.g. git repository) and outputs (e.g. image registry) to and out of a pipeline or task</li>
+<li>TaskRun: the execution and result of running an instance of task</li>
+<li>PipelineRun: the execution and result of running an instance of pipeline, which includes a number of TaskRuns</li>
+</ul>
+<p>In short, in order to create a pipeline, one does the following:</p>
+<ul>
+<li>Create custom Tasks</li>
+<li>Create a Pipeline and PipelineResources to define application delivery pipeline</li>
+<li>Create a PipelineRun to instantiate and invoke the pipeline</li>
+</ul>
+<h2 id="creating-a-simple-pipeline">Creating a simple pipeline</h2>
+<p>In this lab, we will create a simple pipeline to explore Tekton concepts. A pipeline would normally contain tasks to gather code from a source repository, build it, containerize it, and push it to the container registry. In this case, we will only create tasks that produce logs. </p>
+<h3 id="create-some-tasks">Create some tasks</h3>
+<p>For each task you have the option of creating it manually in the OpenShift console or using the command line to apply an existing yaml file. To create a task manually, expand 'Pipelines' in the OpenShift console and click on 'Tasks'. In the upper right hand corner, click 'Create' and select 'Task'. Edit the yaml for the task to match the values in the provided files, or experiment with different values. The tasks do not have to exactly match the provided tasks for the purposes of this lab. </p>
+<ol>
+<li>Create a task named 'hello' that will echo a parameter value to the logs. If using the command line, download the file <a href="../lab_pipelines_assets/hello.yaml"><code>hello.yaml</code></a> and run <code>oc apply -f hello.yaml</code>. If using the console, enter the contents of <code>hello.yaml</code> into the <code>Create Task</code> editor.<br />
+<img alt="" src="../images/createTask.png" /></li>
+<li>Create a task named 'goobye' that will echo 'Goodbye' to the logs. If using the command line, download the file file <a href="../lab_pipelines_assets/goodbye.yaml"><code>goodbye.yaml</code></a> and run <code>oc apply -f goodbye.yaml</code>. If using the console, enter the contents of <code>goodbye.yaml</code> into the <code>Create Task</code> editor.</li>
+<li>Create a task named 'failing-task' that will always fail. Again, either download the file <a href="../lab_pipelines_assets/fail.yaml"><code>fail.yaml</code></a> and run <code>oc apply -f fail.yaml</code> or enter the contents into the console's <code>Create Task</code> editor. </li>
+<li>In the OpenShift console, expand 'Pipelines' and select 'Tasks'. You should see the three tasks you created. Click on each one and examine the yaml definition.<br />
+<img alt="" src="../images/taskList.png" /></li>
+<li>If using the command line, run <code>oc get task</code> to view the created tasks. <pre><code>labs % oc get task 
+NAME           AGE
+failing-task   53s
+goodbye        109s
+hello          3m4s
+</code></pre>
+</li>
+</ol>
+<h3 id="create-a-pipeline">Create a pipeline</h3>
+<p>For this part of the lab we will use the OpenShift console to create a pipeline consisting of the tasks we just created. </p>
+<ol>
+<li>In the console, expand 'Pipelines' and click on 'Pipelines'.</li>
+<li>In the upper right hand corner, click on 'Create' and select 'Pipeline'</li>
+<li>You should now see the 'Pipeline Builder' view which we will use to create a new pipeline. Enter a name for the pipeline such as 'lab-pipeline'.</li>
+<li>In the 'Tasks' section, click on 'Add Task'. In the search box, enter 'hello'. As you are typing, notice that there are many other predefined tasks that are also available. When you find the 'hello' task, click the 'Add' button to add it to the pipeline. </li>
+<li>The 'hello' task is now in the pipeline. Hover over the task in the builder and notice that there is a '+' symbol at the left, right, and bottom of the task bubble. We want to have our next task run after the 'hello' task, so click the '+' to the right of the bubble. </li>
+<li>A new 'Add Task' bubble is now available to the right of the 'hello' bubble. Click on it and add the 'goodbye' task. </li>
+<li>Click 'Create' to create the pipeline</li>
+</ol>
+<h3 id="running-the-pipeline">Running the pipeline</h3>
+<ol>
+<li>After clicking 'Create' you are shown an overview of the pipeline. You can click on 'yaml' to examine the details of the pipeline that was created. </li>
+<li>Run the pipeline by clicking on 'Actions' in the upper right hand corner and selecting 'Start'. You can see the progress of the pipeline run in the 'PipelineRun details' section of the resulting screen. After a short amount of time, both 'hello' and 'goodbye' should have green check marks indicating that they have finished. </li>
+<li>Click on 'logs' and click on either 'Hello' or 'Goodbye'. You should see the output for the task you created. </li>
+<li>Navigate back to the list of pipelines (Pipelines-&gt;Pipelines in the console). You should now see a green bar next to your pipeline indicating that the run was succesful. </li>
+</ol>
+<h3 id="editing-the-pipeline">Editing the pipeline</h3>
+<ol>
+<li>Navigate to the details page for the pipeline by clicking on it. Select Actions-&gt;Edit Pipeline. This will bring you back tot he pipeline builder screen. </li>
+<li>Add a new task between the 'Hello' and 'Goobye' tasks by clicking the '+' symbol either to the right of 'Hello' or to the left of 'Goodbye'. Click on the resulting 'Add Task' bubble and add a task for 'failing-task'. </li>
+<li>There should be a red exclamation mark on the newly created task. Hover over it to see what the problem is. </li>
+<li>Before we can save the new pipeline, we have to provide parameters for the 'failing-task' task. Click on the task bubble and a details panel will appear to the right of the screen. In the 'Parameters' section, enter a value for 'appName'. The red exclamation mark should go away, and saving the pipeline is now enabled. </li>
+<li>Save the pipeline by clicking the 'Save' button. </li>
+</ol>
+<h3 id="rerunning-the-pipeline">Rerunning the pipeline</h3>
+<ol>
+<li>Start a new run by selecting Actions-&gt;Start. This time, the pipeline details should show a green check mark for 'Hello', and a red exclamation mark for 'failing-task'. The 'Goodbye' task does not run. </li>
+<li>Click on the 'Events' tab. It should show that 'failing-task' exited with exit code 2, and that the Pipeline Run had one failed task and one skipped task. </li>
+<li>Navigate back to the list of Pipelines. You should now have a green, red, and gray bar next to the pipeline that shows the completed, failed, and skipped tasks in the pipeline. </li>
+</ol>
+<h3 id="adding-finally-tasks">Adding 'finally' tasks</h3>
+<ol>
+<li>Now edit the pipeline again. This time, add several 'Finally' tasks by clicking on the '+' next to 'Add finally task'. Repeat the procedure a few times, adding the hello and goodbye tasks. Notice that all of the tasks run in parallel. </li>
+<li>Save the pipeline and run it again. Notice that the 'Goodbye' task still doesn't run, but all of the 'Finally' tasks you added are executed. Note that the 'Finally' tasks may appear to run sequentially in the order they are defined because there aren't enough system resources to handle them at once, but they are actually run in parallel. </li>
+</ol>
+<h2 id="install-tekton-dashboard">Install Tekton dashboard</h2>
+<p>The Tekton dashboard provides a more detailed overview of OpenShift pipelines than the OpenShift console. Use the following steps to install the dashboard:</p>
+<ol>
+<li>Run <code>curl -L -O https://github.com/tektoncd/dashboard/releases/download/v0.32.0/release-full.yaml</code> from a terminal. If you're working on a system that doesn't have curl installed, just download the file using a browser. </li>
+<li>The downloaded yaml file uses the namespace <code>tekton-pipelines</code> by default, but we need to install it in <code>openshift-pipelines</code>. To fix this, replace all instances of <code>tekton-pipelines</code> in <code>release-full.yaml</code> with <code>openshift-pipelines</code> (linux command: <code>sed -i 's/tekton-pipelines/openshift-pipelines/g' release-full.yaml</code> mac command: <code>sed -i.bak 's/tekton-pipelines/openshift-pipelines/g' release-full.yaml</code>)</li>
+<li>Run <code>oc apply -f release-full.yaml</code></li>
+<li>Run <code>oc get pods -n openshift-pipelines</code>. The dashboard will be installed when all pods are in 'Running' state. </li>
+<li>Run <code>oc expose svc/tekton-dashboard -n openshift-pipelines</code> to create a route to the dashboard</li>
+<li>Run <code>oc get route tekton-dashboard -n openshift-pipelines</code> to get the URL for the dashboard</li>
+</ol>
+<h1 id="learn-more">Learn More</h1>
+<ul>
+<li><a href="https://github.com/openshift/pipelines-tutorial#deploy-sample-application">OpenShift Pipelines Tutorial</a></li>
+<li><a href="https://github.com/IBM/tekton-tutorial">Knative Deployment using Tekton Pipelines</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_basics_openshift_health/" class="btn btn-neutral float-left" title="Health of the cluster"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../appendix/" class="btn btn-neutral float-right" title="End of labs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_basics_openshift_health/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../appendix/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

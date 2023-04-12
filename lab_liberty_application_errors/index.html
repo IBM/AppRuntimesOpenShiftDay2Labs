@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Application errors - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Application errors";
+        var mkdocs_page_input_path = "lab_liberty_application_errors.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>WebSphere Liberty on OpenShift &raquo;</li>
+      <li>Application errors</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-application-errors-or-warnings">Lab: Application Errors or Warnings</h1>
+<p>This lab covers how to investigate application errors or warnings in Liberty applications in OpenShift.</p>
+<hr />
+<h2 id="lab">Lab</h2>
+<p>This lab will take approximately 5 minutes.</p>
+<h3 id="step-1-install-example-application">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a>. If you installed it in a previous lab, you may continue using the previous installation.</p>
+<h3 id="step-2-exercise-error-servlet">Step 2: Exercise error servlet</h3>
+<p>Now you will use the libertydiag application to simulate errors. </p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to simulate errors:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/Exceptions"
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/Exceptions"
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>You should see an exception stack trace. If not, rerun the <code>curl</code> command with the <code>-v</code> option to investigate. </p>
+</li>
+<li>
+<p>Request the following web page from your terminal with additional parameters:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/Exceptions?throwAllTheWay=true&amp;throwmessage=errorEncountered&amp;throwconstructor=message"
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/Exceptions?throwAllTheWay=true&amp;throwmessage=errorEncountered&amp;throwconstructor=message"
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on the <code>Exceptions</code> link from the libertydiag application homepage:<br />
+<img alt="" src="../images/exceptionServlet.png" /></li>
+<li>
+<p>You should see an exception stack trace in the browser. Now add the query parameters <code>throwAllTheWay=true&amp;throwmessage=errorEncountered</code> to the end of the URL and press <code>ENTER</code>:</p>
+<pre><code>[...]/servlet/Exceptions?throwAllTheWay=true&amp;throwmessage=errorEncountered&amp;throwconstructor=message
+</code></pre>
+</li>
+<li>
+<p>You should see a different error page with an Error 500. Reload the page a couple of times. </p>
+</li>
+</ol>
+</details>
+<h3 id="step-3-review-log-data">Step 3: Review log data</h3>
+<p>Now you will review the logs to understand how to investigate exceptions. </p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Print the native logs of the pod by replacing <code>$POD</code> with the pod name from the previous command. The native logs are equivalent to the Liberty <code>console.log</code> in a non-cloud deployment.</p>
+<pre><code>oc logs $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc logs libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>The native logs are a bit hard to review since they're in JSON, so next we'll review the <code>messages.log</code>.</p>
+</li>
+<li>
+<p>Open a shell into the pod by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc rsh -t $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc rsh -t libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code> to print the full Liberty <code>messages.log</code>:</p>
+<pre><code>cat /logs/messages.log
+</code></pre>
+</li>
+<li>
+<p>You should see an application exception in the logs such as:</p>
+<pre><code>[1/11/23 20:01:10:780 UTC] 00000028 com.ibm.ws.webcontainer.util.ApplicationErrorUtils           E SRVE0777E: Exception thrown by application class 'com.example.servlet.Exceptions.doWork:50'
+com.example.util.SkipCatchException: errorEncountered
+   at com.example.servlet.Exceptions.doWork(Exceptions.java:50)
+   at com.example.util.BaseServlet.service(BaseServlet.java:104) [...]
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on <code>View logs</code> for the one pod that's running. The <code>View logs</code> output is equivalent to the Liberty <code>console.log</code> in a non-cloud deployment.<br />
+<img alt="" src="../images/podviewlogs.png" /></li>
+<li>Click on the <code>Terminal</code> tab to open a remote shell into the running container in the pod:<br />
+<img alt="" src="../images/pod_terminal.png" /></li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code> to print the full Liberty <code>messages.log</code>:</p>
+<pre><code>cat /logs/messages.log
+</code></pre>
+</li>
+<li>
+<p>You should see an application exception in the logs such as:</p>
+<pre><code>[1/11/23 20:01:10:780 UTC] 00000028 com.ibm.ws.webcontainer.util.ApplicationErrorUtils           E SRVE0777E: Exception thrown by application class 'com.example.servlet.Exceptions.doWork:50'
+com.example.util.SkipCatchException: errorEncountered
+   at com.example.servlet.Exceptions.doWork(Exceptions.java:50)
+   at com.example.util.BaseServlet.service(BaseServlet.java:104) [...]
+</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="step-4-download-liberty-logs">Step 4: Download Liberty logs</h3>
+<p>In many cases, you may want the full logs for review on your workstation.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-ddf5f95b6-wj6dm   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Download the Liberty <code>messages.log</code> by replacing <code>$POD</code> with a pod name from the previous command</p>
+<pre><code>oc cp $POD:/logs/messages.log messages.log
+</code></pre>
+<p>For example:</p>
+<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/logs/messages.log messages.log
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>Files other than native logs (equivalent to Liberty's <code>console.log</code>) cannot be downloaded through the browser. You must use the command line steps above. Alternatively, you may use the <code>Terminal</code> tab of the pod and <code>cat</code> the file in the browser.</p>
+</details>
+<h3 id="summary">Summary</h3>
+<p>In summary, this lab demonstrated how to view Liberty logs in an OpenShift environment to investigate exceptions. </p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_liberty_high_http_response_times/" class="btn btn-neutral float-left" title="High response times"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_liberty_java_oome/" class="btn btn-neutral float-right" title="Java OutOfMemoryErrors">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_liberty_high_http_response_times/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_liberty_java_oome/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

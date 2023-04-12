@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Java OutOfMemoryErrors - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Java OutOfMemoryErrors";
+        var mkdocs_page_input_path = "lab_liberty_java_oome.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>WebSphere Liberty on OpenShift &raquo;</li>
+      <li>Java OutOfMemoryErrors</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-java-outofmemoryerrors">Lab: Java OutOfMemoryErrors</h1>
+<p>This lab covers how to investigate Java OutOfMemoryErrors for a sample Liberty application in OpenShift.</p>
+<h2 id="theory">Theory</h2>
+<p>There are multiple ways to review a Java OutOfMemoryError (OOME) in an OpenShift environment:</p>
+<ol>
+<li>Gather and review a heapdump (<code>*.phd</code>) produced by the OOME</li>
+<li>Gather and review a system coredump (<code>*.dmp</code>) produced by the OOME</li>
+</ol>
+<h2 id="labs">Labs</h2>
+<p>Choose one or more labs:</p>
+<ol>
+<li><a href="#lab-gather-and-review-a-heapdump-phd-produced-by-the-oome">Lab: Gather and review a heapdump (<code>*.phd</code>) produced by the OOME</a></li>
+<li><a href="#lab-gather-and-review-a-system-coredump-dmp-produced-by-the-oome">Lab: Gather and review a system coredump (<code>*.dmp</code>) produced by the OOME</a></li>
+</ol>
+<hr />
+<h2 id="lab-gather-and-review-a-heapdump-phd-produced-by-the-oome">Lab: Gather and review a heapdump (<code>*.phd</code>) produced by the OOME</h2>
+<p>This lab will simulate a Java OutOfMemoryError and show how to download the resulting heapdump (<code>*.phd</code>) for analysis using the <a href="https://www.ibm.com/support/pages/eclipse-memory-analyzer-tool-dtfj-and-ibm-extensions">Eclipse Memory Analyzer Tool</a>.</p>
+<p>This lab will take approximately 10 minutes.</p>
+<h3 id="step-1-install-example-application">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a>. If you installed it in a previous lab, you may continue using the previous installation.</p>
+<h3 id="step-2-exercise-a-java-outofmemoryerror">Step 2: Exercise a Java OutOfMemoryError</h3>
+<p>You will simulate a Java OutOfMemoryError by sending an HTTP request which allocates 1MB arrays until the Java heap is exhausted.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to simulate an OutOfMemoryError:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/AllocateObject?size=1048576&amp;iterations=10000&amp;waittime=10&amp;retainData=false"
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/AllocateObject?size=1048576&amp;iterations=10000&amp;waittime=10&amp;retainData=false"
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>
+<p>Craft the following link, replacing <code>$HOST</code> with the hostname of the application from the installation step above when you opened the <code>libertydiag</code> application in your browser (e.g. <code>libertydiag-user1-namespace.apps.was-education-cluster.example.com</code>):</p>
+<pre><code>http://$HOST/servlet/AllocateObject?size=1048576&amp;iterations=10000&amp;waittime=10&amp;retainData=false
+</code></pre>
+</li>
+<li>
+<p>Open this link in the browser</p>
+</li>
+</ol>
+</details>
+<h3 id="step-3-confirm-the-outofmemoryerror-has-occurred">Step 3: Confirm the OutOfMemoryError has occurred</h3>
+<p>When an OutOfMemoryError occurs, a message is written by the JVM into standard error (<code>stderr</code>). Standard error and standard output (<code>stdout</code>) are what are referred to in Kubernetes as the "logs" of a container. These logs are the "native" logs of the process and they are different than WebSphere logs. For WebSphere Liberty, the container logs are equivalent to <code>console.log</code> when running Liberty outside of containers. You may or may not find evidence of the OutOfMemoryError in WebSphere logs (e.g. <code>messages.log</code>) depending on whether the application handles the exception.</p>
+<p>You will review the container logs to confirm that the OutOfMemoryError occurred.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Print the native logs of the pod by replacing <code>$POD</code> with the pod name from the previous command:</p>
+<pre><code>oc logs $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc logs libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>You should see OutOfMemoryError lines such as the following. If you don't see them, give it some time and print the logs again.</p>
+<pre><code>JVMDUMP039I Processing dump event "systhrow", detail "java/lang/OutOfMemoryError" at 2022/12/07 16:43:38 - please wait.
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on <code>View logs</code> for the one pod that's running:<br />
+<img alt="" src="../images/podviewlogs.png" /></li>
+<li>You should see OutOfMemoryError lines such as the following. If you don't see them, give it some time by watching the bottom of the logs.<br />
+<img alt="" src="../images/podlogsoome.png" /></li>
+</ol>
+</details>
+<h3 id="step-4-gather-the-heapdumps-and-javacores">Step 4: Gather the heapdumps and javacores</h3>
+<p>Now you will gather the heapdumps and javacores produced by the OOME.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Open a shell into the pod by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc rsh -t $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc rsh -t libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Note that the remote shell might timeout after a short period of inactivity, so be aware that you might have been logged out and you'll need to <code>oc rsh</code> back in to continue where you left off.</p>
+</li>
+<li>
+<p>First, we need to find the process ID (PID) of Liberty. Most Liberty images do not have tools like <code>ps</code> or <code>top</code> pre-installed. However, most Liberty images only have a single process in the container which is the Java process running Liberty, and this has the PID of 1. Double check that this is the Liberty process by doing a full listing on PID 1:</p>
+<pre><code>ls -l /proc/1/
+</code></pre>
+</li>
+<li>
+<p>If you see a Liberty current working directory (<code>cwd</code>) such as <code>/opt/ol/wlp</code> or <code>/opt/ibm/wlp</code> then you can assume that is the Liberty process. Otherwise, run <code>ls -l /proc/[0-9]*</code> and then explore each PID to find the Liberty process.</p>
+<pre><code>ls -l /proc/1
+</code></pre>
+<p>Example output:</p>
+<pre><code>[...]
+lrwxrwxrwx.  1 1000830000 root 0 Dec  6 17:45 cwd -&gt; /opt/ol/wlp/output/defaultServer
+-r--------.  1 1000830000 root 0 Dec  6 17:45 environ
+lrwxrwxrwx.  1 1000830000 root 0 Dec  6 14:57 exe -&gt; /opt/ibm/java/jre/bin/java
+[...]
+</code></pre>
+</li>
+<li>
+<p>Normally, heapdumps for IBM Java and Semeru will be produced as <code>heapdump*phd</code> files in the <code>cwd</code> directory that you found above:</p>
+<pre><code>ls -l /opt/ol/wlp/output/defaultServer/heapdump*phd
+</code></pre>
+<p>However, in the case of this sample application, this directory is overridden with an <code>-Xdump</code> configuration. You can check JVM configurations by printing the process <code>cmdline</code> and <code>environ</code> files and find the relevant configuration. For example:</p>
+<pre><code>cat /proc/1/cmdline /proc/1/environ
+</code></pre>
+<p>Example output:</p>
+<pre><code>[...] -Xdump:directory=logs/diagnostics/
+</code></pre>
+<p>Therefore, for this application, heapdumps will go into <code>logs/diagnostics/</code> relative to <code>cwd</code>:</p>
+<pre><code>ls /opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump*phd
+</code></pre>
+<p>Example output:</p>
+<pre><code>/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172449.1.0002.phd
+/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172502.1.0005.phd
+/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0008.phd
+/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0009.phd
+</code></pre>
+<p>Note that overridding the <code>-Xdump</code> directory is common in container deployments so that a directory may be used that's mounted on a permanent disk so that diagnostics are still available if a pod is killed.</p>
+</li>
+</ol>
+</details>
+<h3 id="step-5-download-heapdumps">Step 5: Download heapdumps</h3>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>Download the heaps dumps by replacing <code>$POD</code> with a pod name from above and <code>$DIR</code> with the directory of the heapdumps. Note that <code>oc cp</code> does not support wildcards so the whole directory (or a single file) must be downloaded.<pre><code>oc cp $POD:$DIR .
+</code></pre>
+<p>For example:</p>
+<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/opt/ol/wlp/output/defaultServer/logs/diagnostics .
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>Files other than native logs (equivalent to Liberty's <code>console.log</code>) cannot be downloaded through the browser. You must use the command line steps above.</p>
+</details>
+<h3 id="step-6-analyze-the-heap-dumps">Step 6: Analyze the heap dumps</h3>
+<p>If you are familiar with analyzing heaps dumps, you may skip this step.</p>
+<details>
+<summary>Review heap dumps</summary>
+<ol>
+<li>Go to <a href="https://www.ibm.com/support/pages/eclipse-memory-analyzer-tool-dtfj-and-ibm-extensions">https://www.ibm.com/support/pages/eclipse-memory-analyzer-tool-dtfj-and-ibm-extensions</a></li>
+<li>Follow the instructions to download and launch MAT. These dumps are produced by IBM Java 8, so choose that download.</li>
+<li>Click File } Open Heap Dump...</li>
+<li>Open the first <code>phd</code> file that was downloaded.</li>
+<li>In the <code>Getting Started Wizard</code>, choose <code>Leak Suspects Report</code> and click <code>Finish</code></li>
+<li>
+<p>Review the leak suspects report which will highlight the cause of the OOME. For example:</p>
+<blockquote>
+<p>The class com.example.servlet.AllocateObject occupies 426,783,880 (91.14%) bytes. The memory is accumulated in one instance of java.lang.Object[] which occupies 426,779,160 (91.14%) bytes.</p>
+</blockquote>
+</li>
+</ol>
+</details>
+<h3 id="summary">Summary</h3>
+<p>In summary, this lab demonstrated how to simulate a Java OutOfMemoryError, detect an OOME occurred in container logs, download the heapdump and javacore diagnostics, and review them in the Eclipse Memory Analyzer Tool.</p>
+<hr />
+<h2 id="lab-gather-and-review-a-system-coredump-dmp-produced-by-the-oome">Lab: Gather and review a system coredump (<code>*.dmp</code>) produced by the OOME</h2>
+<p>This lab will simulate a Java OutOfMemoryError and show how to download the resulting system coredump (<code>*.dmp</code>) for analysis using the <a href="https://www.ibm.com/support/pages/eclipse-memory-analyzer-tool-dtfj-and-ibm-extensions">Eclipse Memory Analyzer Tool</a>.</p>
+<p><strong>Note</strong>: This lab requires that the user has <code>cluster-admin</code> permissions to access the system coredump on the worker node.</p>
+<p>This lab will take approximately 20 minutes.</p>
+<h3 id="step-0-check-if-you-have-cluster-admin-permissions">Step 0: Check if you have cluster-admin permissions</h3>
+<p>These steps will show if you have <code>cluster-admin</code> permissions. If you do not, you must skip this lab.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Check if you have authority for all verbs on all resources:</p>
+<pre><code>oc auth can-i '*' '*'
+</code></pre>
+<p>Example output:</p>
+<pre><code>yes
+</code></pre>
+</li>
+<li>
+<p>If the answer is <code>no</code>, then you do not have <code>cluster-admin</code> permissions.</p>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Access your OpenShift web console at <code>https://console-openshift-console.$CLUSTER/</code>. Replace <code>$CLUSTER</code> with your OpenShift cluster domain.</li>
+<li>Ensure the perspective is set to <code>Administrator</code> in the top left:<br />
+<img alt="" src="../images/adminperspective.png" /></li>
+<li>Expand <code>User Management</code>. If you don't see a <code>Users</code> option, then you do not have <code>cluster-admin</code> permissions. If you do see it, click on it, and then click on your user name:<br />
+<img alt="" src="../images/users.png" /></li>
+<li>Click on <code>RoleBindings</code> and check if any binding has a <code>Role ref</code> of <code>cluster-admin</code>. If there are none, then you do not have <code>cluster-admin</code> permissions.<br />
+<img alt="" src="../images/clusteradmin.png" /></li>
+</ol>
+</details>
+<h3 id="step-1-install-example-application_1">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a>. If you installed it in a previous lab, you may continue using the previous installation.</p>
+<h3 id="step-2-exercise-a-java-outofmemoryerror_1">Step 2: Exercise a Java OutOfMemoryError</h3>
+<p>If you completed the previous lab above and generated an OOM already, skip down to <a href="#step-4-gather-the-system-coredump">Step 4: Gather the system coredump</a>.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to simulate an OutOfMemoryError:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/AllocateObject?size=1048576&amp;iterations=10000&amp;waittime=10&amp;retainData=false"
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/AllocateObject?size=1048576&amp;iterations=10000&amp;waittime=10&amp;retainData=false"
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>
+<p>Craft the following link, replacing <code>$HOST</code> with the hostname of the application from the installation step above when you opened the <code>libertydiag</code> application in your browser (e.g. <code>libertydiag-user1-namespace.apps.was-education-cluster.example.com</code>):</p>
+<pre><code>http://$HOST/servlet/AllocateObject?size=1048576&amp;iterations=10000&amp;waittime=10&amp;retainData=false
+</code></pre>
+</li>
+<li>
+<p>Open this link in the browser</p>
+</li>
+</ol>
+</details>
+<h3 id="step-3-confirm-the-outofmemoryerror-has-occurred_1">Step 3: Confirm the OutOfMemoryError has occurred</h3>
+<p>When an OutOfMemoryError occurs, a message is written by the JVM into standard error (<code>stderr</code>). Standard error and standard output (<code>stdout</code>) are what are referred to in Kubernetes as the "logs" of a container. These logs are the "native" logs of the process and they are different than WebSphere logs. For WebSphere Liberty, the container logs are equivalent to <code>console.log</code> when running Liberty outside of containers. You may or may not find evidence of the OutOfMemoryError in WebSphere logs (e.g. <code>messages.log</code>) depending on whether the application handles the exception.</p>
+<p>You will review the container logs to confirm that the OutOfMemoryError occurred.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Print the native logs of the pod by replacing <code>$POD</code> with the pod name from the previous command:</p>
+<pre><code>oc logs $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc logs libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>You should see OutOfMemoryError lines such as the following. If you don't see them, give it some time and print the logs again.</p>
+<pre><code>JVMDUMP039I Processing dump event "systhrow", detail "java/lang/OutOfMemoryError" at 2022/12/07 16:43:38 - please wait.
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on <code>View logs</code> for the one pod that's running:<br />
+<img alt="" src="../images/podviewlogs.png" /></li>
+<li>You should see OutOfMemoryError lines such as the following. If you don't see them, give it some time by watching the bottom of the logs.<br />
+<img alt="" src="../images/podlogsoome.png" /></li>
+</ol>
+</details>
+<h3 id="step-4-gather-the-system-coredump">Step 4: Gather the system coredump</h3>
+<p>Now you will gather the system coredump produced by the JVM. Unlike heapdumps and javacores, in many OpenShift environments, a system coredump is produced on the worker node rather than inside the container. Therefore, a user with <code>cluster-admin</code> authority must be used to download the coredump.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Find the worker node of the pod by replacing <code>$POD</code> with the pod name from the previous command:</p>
+<pre><code>oc get pod --output "jsonpath={.spec.nodeName}{'\n'}" $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc get pod --output "jsonpath={.spec.nodeName}{'\n'}" libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Start a debug pod on that worker node by replacing <code>$NODE</code> with the node name from the previous command:</p>
+<pre><code>oc debug node/$NODE -t
+</code></pre>
+<p>For example:</p>
+<pre><code>oc debug node/worker0.was-education-cluster.example.com -t
+</code></pre>
+</li>
+<li>
+<p>Note that the remote shell might timeout after a short period of inactivity, so be aware that you might have been logged out and you'll need to re-run <code>oc debug node</code> to continue where you left off.</p>
+</li>
+<li>
+<p>These systems use <code>systemd-coredump</code> which places core dumps in <code>/var/lib/systemd/coredump/</code> (other systems may use <a href="https://github.com/eclipse-openj9/openj9-docs/issues/1033">other locations</a>). To see them through the debug pod, prepend <code>/host</code>:</p>
+<pre><code>sh-4.4# ls -l /host/var/lib/systemd/coredump/
+total 115824
+-rw-r-----+ 1 root root 118596950 Feb 28 16:25 'core.Default\x20Executo.1001210000.06a2f2e0997c46b2b50bdac3c25ab072.831941.1677601537000000.lz4'
+</code></pre>
+</li>
+<li>
+<p>Confirm the matching timestamp when the OutOfMemoryError occurred.</p>
+</li>
+<li>
+<p>Now we'll use this debug pod to download the file. First start a looping output so that the debug pod doesn't timeout by executing:</p>
+<pre><code>while true; do echo 'Sleeping'; sleep 8; done
+</code></pre>
+</li>
+<li>
+<p>Next, open a new terminal and find the debug pod and namespace. For example:</p>
+<pre><code>oc get pods --field-selector=status.phase==Running --all-namespaces | grep debug
+</code></pre>
+<p>Example output:</p>
+<pre><code>openshift-debug-node-4whw7mhb8j  worker0was-education-clusterexamplecom-debug   1/1     Running   0     2m46s
+</code></pre>
+</li>
+<li>
+<p>Use the above namespace (first column) and pod name (second column) to download the core dump from the worker node. Unfortunately, there is an <a href="https://github.com/openshift/oc/issues/1358">open issue with escape characters</a> so we must download the entire dumps directory:</p>
+<pre><code>oc cp --namespace openshift-debug-node-4whw7mhb8j "worker0was-education-clusterexample.com-debug:/host/var/lib/systemd/coredump/" coredumps
+</code></pre>
+</li>
+<li>
+<p>Change directory into <code>coredumps</code> and any subdirectory that was created and then uncompress the core dump:</p>
+<ol>
+<li>
+<p>Install the <code>lz4</code> utility:</p>
+<ol>
+<li>
+<p>macOS:</p>
+<pre><code>brew install lz4
+</code></pre>
+</li>
+<li>
+<p>Windows: Download <a href="https://github.com/lz4/lz4/releases/latest">lz4</a> (under Assets at the bottom)</p>
+</li>
+<li>Linux: <a href="https://publib.boulder.ibm.com/httpserv/cookbook/Operating_Systems-Linux.html#Operating_Systems-Linux-Installing_Programs">Install</a> the <code>lz4</code> program</li>
+</ol>
+</li>
+<li>
+<p>Decompress the file (replacing <code>$FILE</code> with the file name):</p>
+<pre><code>lz4 -dc $FILE.lz4 &gt; core.dmp
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>Go back to the previous terminal window and type <code>Ctrl^C</code> to stop the <code>while</code> loop, and then <code>exit</code> the debug node.</p>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>Files other than native logs (equivalent to Liberty's <code>console.log</code>) cannot be downloaded through the browser. You must use the command line steps above.</p>
+</details>
+<h3 id="step-5-analyze-the-system-coredump">Step 5: Analyze the system coredump</h3>
+<p>If you are familiar with analyzing system coredumps, you may skip this step.</p>
+<details>
+<summary>Review core dump</summary>
+<ol>
+<li>Go to <a href="https://www.ibm.com/support/pages/eclipse-memory-analyzer-tool-dtfj-and-ibm-extensions">https://www.ibm.com/support/pages/eclipse-memory-analyzer-tool-dtfj-and-ibm-extensions</a></li>
+<li>Follow the instructions to download and launch MAT. These dumps are produced by IBM Java 8, so choose that download.</li>
+<li>Click File } Open Heap Dump...</li>
+<li>Open the <code>*.dmp</code> file that was downloaded.</li>
+<li>In the <code>Getting Started Wizard</code>, choose <code>Leak Suspects Report</code> and click <code>Finish</code></li>
+<li>
+<p>Review the leak suspects report which will highlight the cause of the OOME. For example:</p>
+<blockquote>
+<p>The class com.example.servlet.AllocateObject occupies 426,783,880 (91.14%) bytes. The memory is accumulated in one instance of java.lang.Object[] which occupies 426,779,160 (91.14%) bytes.</p>
+</blockquote>
+</li>
+</ol>
+</details>
+<h3 id="summary_1">Summary</h3>
+<p>In summary, this lab demonstrated how to simulate a Java OutOfMemoryError, detect an OOME occurred in container logs, download the system coredump diagnostic, and review it in the Eclipse Memory Analyzer Tool.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_liberty_application_errors/" class="btn btn-neutral float-left" title="Application errors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_liberty_instanton/" class="btn btn-neutral float-right" title="InstantOn">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_liberty_application_errors/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_liberty_instanton/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Install Sample Liberty Application - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Install Sample Liberty Application";
+        var mkdocs_page_input_path = "lab_liberty_install_app.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Appendix &raquo;</li>
+      <li>Install Sample Liberty Application</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="install-sample-websphere-liberty-application">Install Sample WebSphere Liberty Application</h1>
+<p>You will install an example application called <a href="https://github.com/IBM/libertydiag">libertydiag</a>. Note that this link is just for reference as the application image will be pulled by OpenShift.</p>
+<p>Choose to perform the installation either using the WebSphere Liberty Operator or a basic Kubernetes Deployment. If you're not sure, use the WebSphere Liberty Operator. The WebSphere Liberty Operator is essentially a wrapper around a basic Kubernetes Deployment with various <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=operator-websphere-liberty-overview">additional features and conveniences</a>. Some of the labs require the use of the WebSphere Liberty Operator, so if you choose a basic Kubernetes Deployment, you will need to <a href="../lab_liberty_uninstall_app/">uninstall</a> and recreate a WebSphere Liberty Operator deployment for those labs or skip them. We encourage you to test both the WebSphere Liberty Operator and basic Kubernetes Deployments as both are commonly used in the field.</p>
+<p>Choose to use either the command line or the browser. In general, we suggest using the command line. Knowing how to do the same in the browser is optional.</p>
+<p>You may use the same installation for all of the WebSphere Liberty labs, except where otherwise indicated at the beginning of a lab; however, if you decide to do so, some of the labs end with pods in a bad state and you will need to destroy them which will be mentioned in the cleanup steps of such labs.</p>
+<p>If you previously installed this application and you would like to try a different method, then first <a href="../lab_liberty_uninstall_app/">uninstall the sample application</a>.</p>
+<h2 id="install-using-the-websphere-liberty-operator">Install using the WebSphere Liberty Operator</h2>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>If you haven't already, <a href="../openshift_login_commandline/">download the <code>oc</code> executable and log into your OpenShift console through the command line</a></li>
+<li>
+<p>If you have been provided a namespace that you should use, then set your current namespace/project by replacing <code>$NAMESPACE</code> in the following command:</p>
+<pre><code>oc config set-context --current --namespace $NAMESPACE
+</code></pre>
+</li>
+<li>
+<p>Create a file in your current directory named <code>libertydiag.yaml</code> and paste the following contents:</p>
+<pre><code>apiVersion: liberty.websphere.ibm.com/v1
+kind: WebSphereLibertyApplication
+metadata:
+  name: libertydiag
+  annotations:
+    openliberty.io/day2operations: WebSphereLibertyTrace,WebSphereLibertyDump
+spec:
+  license:
+    accept: true
+    edition: IBM WebSphere Application Server
+    metric: Virtual Processor Core (VPC)
+    productEntitlementSource: Standalone
+  applicationImage: quay.io/ibm/libertydiag
+  probes:
+    readiness:
+      initialDelaySeconds: 1
+      failureThreshold: 1
+  manageTLS: true
+  expose: true
+  pullPolicy: Always
+</code></pre>
+</li>
+<li>
+<p>Deploy the YAML:</p>
+<pre><code>oc apply -f libertydiag.yaml
+</code></pre>
+</li>
+<li>
+<p>Run the following command which will wait until the deployment is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits:</p>
+<pre><code>oc wait deployment libertydiag --for condition=available --timeout=5m
+</code></pre>
+</li>
+<li>
+<p>List the route's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={'https://'}{.spec.host}{'/\n'}"
+</code></pre>
+</li>
+<li>
+<p>Open the URL in your browser and accept the certificate warning</p>
+</li>
+<li>You should see the <code>libertydiag</code> application home page:<br />
+<img alt="" src="../images/libertydiag.png" /></li>
+<li>Go back to the previous page in the lab and continue to the next step of the lab</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Access your OpenShift web console at <code>https://console-openshift-console.$CLUSTER/</code>. Replace <code>$CLUSTER</code> with your OpenShift cluster domain.</li>
+<li>Ensure the perspective is set to <code>Developer</code> in the top left:<br />
+<img alt="" src="../images/developerperspective.png" /></li>
+<li>If you have been provided a namespace that you should use, then set your current namespace/project to what you were provided. For example:<br />
+<img alt="" src="../images/selectproject.png" /></li>
+<li>Click <code>Operator Backed</code> on the <code>+Add</code> page:<br />
+<img alt="" src="../images/operatorbacked.png" /></li>
+<li>Click <code>WebSphereLibertyApplication</code>:<br />
+<img alt="" src="../images/operatorapp.png" /></li>
+<li>Click <code>Create</code>:<br />
+<img alt="" src="../images/operatorcreate.png" /></li>
+<li>Scroll to the top and set the fields:<ol>
+<li><code>Name</code> = <code>libertydiag</code></li>
+<li><code>Application Image</code> = <code>quay.io/ibm/libertydiag</code></li>
+<li>Click on <code>License</code> and check <code>accept</code></li>
+<li>Change the <code>Expose</code> toggle to enabled</li>
+</ol>
+</li>
+<li>Expand <code>Probes</code> and click on <code>Readiness Probe</code>:<br />
+<img alt="" src="../images/wslaprobe.png" /></li>
+<li>Set <code>initialDelaySeconds</code> to <code>1</code> and set <code>failureThreshold</code> to <code>1</code>:<br />
+<img alt="" src="../images/wslaprobe2.png" /></li>
+<li>Scroll to the bottom and click <code>Create</code></li>
+<li>You will be taken back to the <code>Topology</code> view and you'll see the new application. While the application is initializing, there will be a light blue circle around it:<br />
+<img alt="" src="../images/wsla1.png" /></li>
+<li>Wait until the circle turns into a dark blue, signifying the application is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits:<br />
+<img alt="" src="../images/wsla2.png" /></li>
+<li>Click the <code>Open URL</code> button on the resulting <code>Topology</code> view to open the application (and accept the certificate warning)<br />
+<img alt="" src="../images/operatoropen.png" /></li>
+<li>You should see the <code>libertydiag</code> application home page:<br />
+<img alt="" src="../images/libertydiag.png" /></li>
+<li>Go back to the previous page in the lab and continue to the next step of the lab</li>
+</ol>
+</details>
+<h2 id="install-using-a-basic-kubernetes-deployment">Install using a basic Kubernetes Deployment</h2>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>If you haven't already, <a href="../openshift_login_commandline/">download the <code>oc</code> executable and log into your OpenShift console through the command line</a></li>
+<li>
+<p>If you have been provided a namespace that you should use, then set your current namespace/project by replacing <code>$NAMESPACE</code> in the following command with the namespace/project you were provided:</p>
+<pre><code>oc config set-context --current --namespace $NAMESPACE
+</code></pre>
+</li>
+<li>
+<p>Create a file name <code>libertydiag.yaml</code> in the same directory where you are running the <code>oc</code> commands:</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: libertydiag
+  labels:
+    app: libertydiag
+spec:
+  selector:
+    matchLabels:
+      app: libertydiag
+  template:
+    metadata:
+      labels:
+        app: libertydiag
+    spec:
+      containers:
+      - name: libertydiag
+        image: quay.io/ibm/libertydiag
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 9080
+            scheme: HTTP
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 1
+</code></pre>
+</li>
+<li>
+<p>Create the deployment (a warning about <code>would violate PodSecurity</code> is expected in development clusters):</p>
+<pre><code>oc apply -f libertydiag.yaml
+</code></pre>
+</li>
+<li>
+<p>Run the following command which will wait until the deployment is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits:</p>
+<pre><code>oc wait deployment libertydiag --for condition=available --timeout=5m
+</code></pre>
+</li>
+<li>
+<p>Create a service for the application to create a load balancer to the deployment:</p>
+<pre><code>oc expose deployment libertydiag --port=80 --target-port=9080
+</code></pre>
+</li>
+<li>
+<p>Create a route for the application to expose the service externally:</p>
+<pre><code>oc create route edge --service=libertydiag
+</code></pre>
+</li>
+<li>
+<p>List the route's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={'https://'}{.spec.host}{'/\n'}"
+</code></pre>
+</li>
+<li>
+<p>Open the URL in your browser and accept the certificate warning</p>
+</li>
+<li>You should see the <code>libertydiag</code> application home page:<br />
+<img alt="" src="../images/libertydiag.png" /></li>
+<li>Go back to the previous page in the lab and continue to the next step of the lab</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Access your OpenShift web console at <code>https://console-openshift-console.$CLUSTER/</code>. Replace <code>$CLUSTER</code> with your OpenShift cluster domain.</li>
+<li>Ensure the perspective is set to <code>Developer</code> in the top left:<br />
+<img alt="" src="../images/developerperspective.png" /></li>
+<li>If you have been provided a namespace that you should use, then set your current namespace/project to what you were provided. For example:<br />
+<img alt="" src="../images/selectproject.png" /></li>
+<li>Click <code>Container Images</code> on the <code>+Add</code> page:<br />
+<img alt="" src="../images/createfromimage.png" /></li>
+<li>Set <code>Image name from external registry</code> to <code>quay.io/ibm/libertydiag</code></li>
+<li>Scroll down to the bottom and click on <code>Health checks</code>:<br />
+<img alt="" src="../images/createapphc1.png" /></li>
+<li>Click on <code>Add Readiness probe</code>:<br />
+<img alt="" src="../images/createapphc2.png" /></li>
+<li>Fill in the following information (in particular, <code>Path</code> = <code>/health/ready</code> and <code>Port</code> = <code>9080</code>) <strong>and</strong> click the small checkbox in the bottom right:<br />
+<img alt="" src="../images/createapphc3.png" /></li>
+<li>You should see <code>Readiness probe added</code>. Click on the <code>Create</code> button:<br />
+<img alt="" src="../images/createapphc4.png" /></li>
+<li>You will be taken back to the <code>Topology</code> view and you'll see the new application. While the application is initializing, there will be a light blue circle around it:<br />
+<img alt="" src="../images/createapphc5.png" /></li>
+<li>Wait until the circle turns into a dark blue, signifying the application is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits:<br />
+<img alt="" src="../images/createapphc6.png" /></li>
+<li>Click the <code>Open URL</code> button to open the application (and accept the certificate warning):<br />
+<img alt="" src="../images/openapp.png" /></li>
+<li>You should see the <code>libertydiag</code> application home page:<br />
+<img alt="" src="../images/libertydiag.png" /></li>
+<li>Go back to the previous page in the lab and continue to the next step of the lab</li>
+</ol>
+</details>
+<h2 id="learn-more">Learn More</h2>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/was-liberty/base?topic=operator-websphere-liberty-overview">WebSphere Liberty Operator</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Basic Kubernetes Deployments</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../faq/" class="btn btn-neutral float-left" title="Frequently Asked Questions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_liberty_uninstall_app/" class="btn btn-neutral float-right" title="Uninstall Sample Liberty Application">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../faq/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_liberty_uninstall_app/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

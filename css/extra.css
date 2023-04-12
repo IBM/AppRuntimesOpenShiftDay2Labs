@@ -1,0 +1,47 @@
+.rst-content .section ol li > br, .rst-content .section ul li > br, .rst-content .toctree-wrapper ol li > br, .rst-content .toctree-wrapper ul li > br, .rst-content section ol li > br, .rst-content section ul li > br {
+    margin-top: 0;
+}
+
+details {
+    margin-bottom: 20px;
+}
+
+details summary {
+    cursor: pointer;
+}
+
+details summary + * {
+    padding-top: 10px;
+}
+
+.section img {
+    border: 1px solid black;
+}
+
+code {
+    white-space: pre-wrap !important;
+    white-space: -moz-pre-wrap !important;
+    white-space: -pre-wrap !important;
+    white-space: -o-pre-wrap !important;
+    word-wrap: break-word !important;
+}
+
+.clipboard {
+    position: relative;
+    display: block;
+    float: right;
+}
+
+.btn-clipboard {
+    position: relative;
+    top: .5rem;
+    right: .5rem;
+    z-index: 10;
+    display: block;
+    padding: .25rem .5rem;
+    cursor: pointer;
+}
+
+div.rst-content > div[role="navigation"] {
+    display: none;
+}

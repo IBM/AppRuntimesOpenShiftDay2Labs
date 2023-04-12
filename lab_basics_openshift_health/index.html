@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Health of the cluster - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Health of the cluster";
+        var mkdocs_page_input_path = "lab_basics_openshift_health.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>General OpenShift Topics &raquo;</li>
+      <li>Health of the cluster</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-general-openshift-health">Lab: General OpenShift Health</h1>
+<p>This lab covers how to check whether an OpenShift environment is generally healthy.</p>
+<h2 id="lab-requirements">Lab Requirements</h2>
+<ol>
+<li>This lab requires that the user has <code>cluster-admin</code> permissions. If you do not, you must skip this lab.</li>
+</ol>
+<h2 id="labs">Labs</h2>
+<p>Choose to perform the web console lab and/or the command line lab:</p>
+<ol>
+<li><a href="#lab-using-the-openshift-web-console-to-check-cluster-health">Lab: Using the OpenShift Web Console to check cluster health</a></li>
+<li><a href="#lab-using-the-command-line-to-check-cluster-health">Lab: Using the command line to check cluster health</a></li>
+</ol>
+<hr />
+<h2 id="lab-using-the-openshift-web-console-to-check-cluster-health">Lab: Using the OpenShift Web Console to check cluster health</h2>
+<ol>
+<li>Access your OpenShift web console at <code>https://console-openshift-console.$CLUSTER/</code>. Replace <code>$CLUSTER</code> with your OpenShift cluster domain.</li>
+<li>After logging in, you should see the Administrator view:<br />
+<img alt="" src="../images/health_consolehome.png" /></li>
+<li>On the main Overview page, scroll down to the <code>Status</code> box and ensure that <code>Cluster</code>, <code>Control Plane</code>, and <code>Operators</code> all show a green check mark. If they do not, there may be a fundamental issue with the cluster worth investigating. There may be a warning for <code>Insights</code> which is okay as it's not required. If there is an issue, clicking the hyperlink will show failure details.<br />
+<img alt="" src="../images/ocstatus.png" /></li>
+<li>On the main Overview page, scroll down to the <code>Details</code> box and review the <code>OpenShift version</code>, and then scroll down to the <code>Cluster inventory</code> box and review the number of pods. If there are any known problematic pods, this will show a small exclamation icon and you can click the hyperlink for details on the failing pods.<br />
+<img alt="" src="../images/clusterversion.png" /></li>
+<li>Next, scroll down to the <code>Cluster Utilization</code> box. You can change the time frame in the top right, and it's often useful to use <code>Filter by Node type</code> next to that to filter down to just worker or master nodes. Each section shows the total available (for example, <code>43.19 available of 48</code> means there are 48 total CPUs and 43.19 are available). Note that the graph y-axis is not scaled to the total available. The dashed yellow lines in the CPU and Memory sections are the sum of CPU and Memory pod requests (if specified) and it's normal for utilization to be above these lines. This may be due to pods using more than requests (up to specified limits) or requests/limits not being specified.<br />
+<img alt="" src="../images/ocutil1.png" /><br />
+   For each resource (e.g. CPU), click on the hyperlinked utilization number to get top consumers and switch to different groupings, e.g. <code>By Node</code> instead of <code>By Project</code>:<br />
+<img alt="" src="../images/ocutil.png" /></li>
+<li>If you want to investigate resources further, on the left side, click Observe (or Monitoring in older versions of OpenShift) } Dashboards } Then click the dropdown and select <code>Node Exporter / USE Method / Cluster</code><br />
+<img alt="" src="../images/ocpdashboard.png" /></li>
+<li>Next, review critical and warning alerts. On the left side, click Observe (or Monitoring in older versions of OpenShift) } Alerting } Then click <code>Filter</code>, and check <code>Critical</code> and <code>Warning</code><br />
+<img alt="" src="../images/ocpalerts3.png" /></li>
+<li>Next, review recent warning and error events: On the left side, click Home } Events } Then change <code>All types</code> to <code>Warning</code><br />
+<img alt="" src="../images/ocevents.png" /></li>
+</ol>
+<h3 id="summary">Summary</h3>
+<p>In summary, this lab demonstrated how to check basic OpenShift health including cluster health, resource utilization, alerts, and events.</p>
+<p>Optionally, you may perform the next lab to get similar information through the command line.</p>
+<hr />
+<h2 id="lab-using-the-command-line-to-check-cluster-health">Lab: Using the command line to check cluster health</h2>
+<ol>
+<li>
+<p>Review the overall cluster status and check if the <code>STATUS</code> column has any errors.</p>
+<pre><code>oc get clusterversion
+</code></pre>
+<p>Example output:  </p>
+<pre><code>NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.11.9    True        False         39d     Cluster version is 4.11.9
+</code></pre>
+</li>
+<li>
+<p>Get the status of cluster operators.</p>
+<pre><code>oc get clusteroperators
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+authentication             4.11.9    True        False         False      3d6h
+</code></pre>
+<p>If any are <code>Degraded=True</code>, then run <code>oc describe clusteroperator $NAME</code>.</p>
+</li>
+<li>
+<p>Review the status of nodes:</p>
+<pre><code>oc get nodes
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                                            STATUS   ROLES    AGE   VERSION
+master0.was-education-cluster                   Ready    master   39d   v1.24.0+dc5a2fd
+master1.was-education-cluster                   Ready    master   39d   v1.24.0+dc5a2fd
+master2.was-education-cluster                   Ready    master   39d   v1.24.0+dc5a2fd
+worker0.was-education-cluster                   Ready    worker   39d   v1.24.0+dc5a2fd
+worker1.was-education-cluster                   Ready    worker   39d   v1.24.0+dc5a2fd
+worker2.was-education-cluster                   Ready    worker   39d   v1.24.0+dc5a2fd
+</code></pre>
+<p>If any are <code>Status=NotReady</code>, then you could <code>oc describe node $NODE</code> and check the <code>Conditions</code> for errors.</p>
+</li>
+<li>
+<p>Review node resource usage:</p>
+<pre><code>oc adm top nodes
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                                            CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+master0.was-education-cluster                   1002m        13%    10931Mi         75%       
+master1.was-education-cluster                   873m         11%    8603Mi          59%       
+master2.was-education-cluster                   1659m        22%    9231Mi          63%       
+worker0.was-education-cluster                   765m         10%    4146Mi          28%       
+worker1.was-education-cluster                   694m         9%     4009Mi          27%       
+worker2.was-education-cluster                   263m         3%     2868Mi          19%
+</code></pre>
+</li>
+<li>
+<p>Review top pod CPU utilization.</p>
+<pre><code>oc adm top pods --sort-by=cpu --all-namespaces
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAMESPACE                   NAME                      CPU(cores)   MEMORY(bytes)   
+openshift-monitoring        prometheus-k8s-1          355m         1779Mi          
+[...]
+</code></pre>
+</li>
+<li>
+<p>Review top pod memory utilization:</p>
+<pre><code>oc adm top pods --sort-by=memory --all-namespaces
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAMESPACE                   NAME                                                            CPU(cores)   MEMORY(bytes)   
+openshift-kube-apiserver    kube-apiserver-master0.was-education-cluster                    318m         3137Mi          
+[...]
+</code></pre>
+</li>
+<li>
+<p>Review critical and warning alerts (on Windows, you'll need to install something like <a href="https://www.cygwin.com/">Cygwin</a>, etc.):</p>
+<ol>
+<li>
+<p>Critical alerts:</p>
+<pre><code>curl -k -H "Authorization: Bearer $(oc create token prometheus-k8s -n openshift-monitoring)" "https://$(oc -n openshift-monitoring get route alertmanager-main -o jsonpath='{.spec.host}')/api/v1/alerts?filter=severity=critical"
+</code></pre>
+</li>
+<li>
+<p>Warning alerts:</p>
+<pre><code>curl -k -H "Authorization: Bearer $(oc create token prometheus-k8s -n openshift-monitoring)" "https://$(oc -n openshift-monitoring get route alertmanager-main -o jsonpath='{.spec.host}')/api/v1/alerts?filter=severity=warning"
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>Review recent warning and error events. This is particularly useful to find if OpenShift is killing application pods for some reason, health check probes are failing, etc.</p>
+<pre><code>oc get events --all-namespaces --sort-by='.lastTimestamp' --field-selector type=Warning -o custom-columns=FirstSeen:.firstTimestamp,LastSeen:.lastTimestamp,Count:.count,From:.source.component,Host:.source.host,Type:.type,Reason:.reason,ObjectKind:.involvedObject.kind,Object:.involvedObject.name,ObjectNamespace:.involvedObject.namespace,Message:.message
+</code></pre>
+</li>
+<li>
+<p>Check a node for kernel errors or warnings (e.g. OOM killer):</p>
+<ol>
+<li>
+<p>List all the nodes:</p>
+<pre><code>oc get nodes
+</code></pre>
+</li>
+<li>
+<p>Take a node name and start a debug pod. For example:</p>
+<pre><code>oc debug node/master0.was-education-cluster                 -t
+</code></pre>
+</li>
+<li>
+<p>Wait for the <code>sh-4.4#</code> prompt.</p>
+</li>
+<li>
+<p>Print the kernel log with a filter for errors:</p>
+<pre><code>chroot /host journalctl -p err | cat
+</code></pre>
+</li>
+<li>
+<p><code>exit</code></p>
+</li>
+</ol>
+</li>
+<li>
+<p>List pods that have failed. It's okay if this output is blank and only shows output if there are active problems.</p>
+<pre><code>oc get pods --all-namespaces --field-selector=status.phase==Failed
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAMESPACE                              NAME                              READY   STATUS   RESTARTS   AGE
+openshift-operator-lifecycle-manager   collect-profiles-27859260-rxwq6   0/1     Error    0          29m
+</code></pre>
+</li>
+<li>
+<p>List pods in a pending state. It's okay if this output is blank and only shows output if there are active problems.</p>
+<pre><code>oc get pods --all-namespaces --field-selector=status.phase==Pending
+</code></pre>
+<p>Example output:</p>
+<pre><code>No resources found
+</code></pre>
+</li>
+<li>
+<p>List pods in an unknown state. It's okay if this output is blank and only shows output if there are active problems.</p>
+<pre><code>oc get pods --all-namespaces --field-selector=status.phase==Unknown
+</code></pre>
+<p>Example output:</p>
+<pre><code>No resources found
+</code></pre>
+</li>
+<li>
+<p>Check for pods with a high restart count. Even if they are in a Running state, a high restart count might indicate underlying problems. The following example shows those with a restart count greater than 3. On Windows, you'll need to install something like <a href="https://www.cygwin.com/">Cygwin</a> with the <code>jq</code> utility. It's okay if this output is blank and only shows output if there are active problems.</p>
+<pre><code>oc get pods --all-namespaces --field-selector=status.phase=Running -o json | jq '.items[]|select(any( .status.containerStatuses[]; .restartCount &gt; 3))|.metadata.name'
+</code></pre>
+</li>
+</ol>
+<h3 id="summary_1">Summary</h3>
+<p>In summary, this lab demonstrated how to check basic OpenShift health including cluster health, resource utilization, alerts, and events.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_liberty_instanton/" class="btn btn-neutral float-left" title="InstantOn"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_pipelines/" class="btn btn-neutral float-right" title="Pipelines">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_liberty_instanton/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_pipelines/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

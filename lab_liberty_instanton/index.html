@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>InstantOn - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "InstantOn";
+        var mkdocs_page_input_path = "lab_liberty_instanton.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>WebSphere Liberty on OpenShift &raquo;</li>
+      <li>InstantOn</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-instanton">Lab: InstantOn</h1>
+<p>This lab covers how to run a Liberty InstantOn container and investigate issues with InstantOn.</p>
+<h2 id="theory">Theory</h2>
+<p>Liberty <a href="https://developer.ibm.com/blogs/liberty-instanton-serverless-for-java-without-compromise/">InstantOn</a> is a capability of Liberty (along with technology in IBM Semeru Java and Linux) to dramatically reduce Liberty start-up time by up to 10-20 <strong>times</strong>. In the example you'll see below, startup time goes from 30-60 seconds to less than 1 second. The technology is currently in beta.</p>
+<p>InstantOn is useful for serverless applications (where Liberty is spawned to handle a single unit of work and then destroyed) but it's also useful for traditional, long-running application scenarios. For example, Kubernetes deployments can be configured to auto-scale based on workload, both down to 0 pods during periods of inactivity (e.g. at night when there may be no users) as well as increasing the number of pods during unexpected spikes of activity. In both of these cases, when a new pod is created, startup time and various caches may affect the requests during the period when new pods are being created and initialized. With InstantOn, start up time can be nearly instantaneous and thus solve those issues with cold starts.</p>
+<p>The way InstantOn generally works in a cloud environment is that the application developer builds the application container, starts the container, and then takes a checkpoint, most often after applications have finished starting, and this checkpoint is saved into a container image. This checkpoint represents all of the memory and state of Liberty in its ready-to-serve state. Then, when a pod is started based off of this image, Liberty works with IBM Semeru Java and Linux to restore this checkpoint and prepare it for serving requests.</p>
+<p>The most common issue with InstantOn is that a security misconfiguration causes the checkpoint restore to fail. In this case, Liberty falls back to a normal, slow start-up. Therefore, you'll go through two labs. First, we'll show InstantOn in action with everything succeeding, and then we'll show InstantOn failing the checkpoint restore and how to review the logs for what went wrong.</p>
+<p>InstantOn in OpenShift has two different ways of running: fully privileged mode (i.e. essentially "root" mode) and non-fully privileged but increased privilege mode. For obvious reasons, it's generally more recommended to run in the latter mode because giving a container root privileges means that security risks are higher. However, running in this lower privileges mode <a href="https://blog.openj9.org/2022/10/05/deploying-on-kubernetes-and-openshift-with-openj9-criu-support/">requires</a> either a Linux kernel that supports the <code>clone3</code> system call with the <code>set_tid</code> argument, or <code>runc</code> version 1.1.3 or higher. Such environments are not yet often available, so this first version of these labs will run in fully privileged mode.</p>
+<h2 id="labs">Labs</h2>
+<ol>
+<li><a href="#lab-instanton-successfully-working-in-privileged-mode">Lab: InstantOn successfully working in privileged mode</a></li>
+<li><a href="#lab-instanton-failing">Lab: InstantOn failing</a></li>
+</ol>
+<hr />
+<h2 id="lab-instanton-successfully-working-in-privileged-mode">Lab: InstantOn successfully working in privileged mode</h2>
+<h3 id="step-1-create-a-serviceaccount">Step 1: Create a ServiceAccount</h3>
+<p>We will run the pod under the authority of a ServiceAccount to which we will associate elevated privileges.</p>
+<details open="open">
+<summary>Using the command line</summary>
+<ol>
+<li>If you haven't already, <a href="../openshift_login_commandline/">download the <code>oc</code> executable and log into your OpenShift console through the command line</a></li>
+<li>
+<p>Create the service account:</p>
+<pre><code>oc create serviceaccount privilegedserviceaccount
+</code></pre>
+</li>
+<li>
+<p>Associate the service account with the <code>privileged</code> security context constraint (SCC):</p>
+<pre><code>oc adm policy add-scc-to-user privileged -z privilegedserviceaccount
+</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="step-2-install-example-application">Step 2: Install example application</h3>
+<ol>
+<li><a href="../lab_liberty_uninstall_app/">Uninstall</a> any previously installed sample application.</li>
+<li>Re-install the sample application using <a href="../lab_liberty_install_app/#install-using-a-basic-kubernetes-deployment">a basic Kubernetes Deployment</a>.</li>
+</ol>
+<h3 id="step-3-test-instanton">Step 3: Test InstantOn</h3>
+<p>First you will see how long it took to start a non-InstantOn application. Then you will delete that and install an InstantOn application for comparison.</p>
+<details open="open">
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Execute a remote search in the pod for the <code>CWWKZ0001I: Application libertydiag started</code> message by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc exec $POD -- grep CWWKZ0001I /logs/messages.log
+</code></pre>
+<p>For example:</p>
+<pre><code>$ oc exec libertydiag-59d59c5dbc-sghwt -- grep CWWKZ0001I /logs/messages.log
+[12/12/22, 20:00:55:275 UTC] 0000002e com.ibm.ws.app.manager.AppMessageHelper   A         CWWKZ0001I: Application libertydiag started in 39.409 seconds.
+</code></pre>
+</li>
+<li>
+<p>Notice that the application took many dozens of seconds to start. In the above example, it took about 40 seconds.</p>
+</li>
+<li>Next, we'll delete this deployment and create an InstantOn deployment.</li>
+<li>
+<p>Delete the current deployment.</p>
+<pre><code>oc delete deployment libertydiag
+</code></pre>
+</li>
+<li>
+<p>Wait about 5 seconds for the deployment to finish deleting. Confirm it's not in the resulting list of all deployments:</p>
+<pre><code>oc get deployments
+</code></pre>
+<p>Example output:</p>
+<pre><code>No resources found in user1-namespace namespace.
+</code></pre>
+</li>
+<li>
+<p>Create a <code>libertydiaginstanton.yaml</code> file with the following contents:</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: libertydiag
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: libertydiag
+  template:
+    metadata:
+      labels:
+        name: libertydiag
+    spec:
+      serviceAccountName: privilegedserviceaccount
+      containers:
+        - name: libertydiag
+          image: quay.io/ibm/libertydiag:instanton
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+</code></pre>
+</li>
+<li>
+<p>Run the YAML file:</p>
+<pre><code>oc apply -f libertydiaginstanton.yaml
+</code></pre>
+</li>
+<li>
+<p>Run the following command which will wait until the deployment is ready:</p>
+<pre><code>oc wait deployment libertydiag --for condition=available --timeout=5m
+</code></pre>
+</li>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-59d59c5dbc-dbz8m  1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Execute a remote search in the pod for the <code>CWWKZ0001I: Application libertydiag started</code> message by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc exec $POD -- grep CWWKZ0001I /logs/messages.log
+</code></pre>
+<p>For example:</p>
+<pre><code>$ oc exec libertydiag-59d59c5dbc-dbz8m -- grep CWWKZ0001I /logs/messages.log
+[12/12/22, 20:13:26:761 UTC] 0000002e com.ibm.ws.app.manager.AppMessageHelper   A           CWWKZ0001I: Application libertydiag started in 0.684 seconds.
+</code></pre>
+</li>
+<li>
+<p>This time, notice that the application started in much less time. In the above example, about half a second.</p>
+</li>
+</ol>
+</details>
+<h3 id="step-4-clean-up">Step 4: Clean-up</h3>
+<p>Clean-up the resources.</p>
+<details open="open">
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Delete the deployment:</p>
+<pre><code>oc delete deployment libertydiag
+</code></pre>
+</li>
+<li>
+<p>Delete the ServiceAccount:</p>
+<pre><code>oc delete serviceaccount privilegedserviceaccount
+</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="summary">Summary</h3>
+<p>In summary, this lab demonstrated how to run a Liberty InstantOn image in privileged mode. It showed that Liberty startup time compared to a normal deployment was more than a magnitude faster.</p>
+<hr />
+<h2 id="lab-instanton-failing">Lab: InstantOn failing</h2>
+<p>This lab will demonstrate how to investigate why InstantOn failed to work. We will deliberately skip steps to mark the deployment as privileged and observe InstantOn errors.</p>
+<p>This lab will take approximately 15 minutes.</p>
+<h3 id="step-1-install-example-application">Step 1: Install example application</h3>
+<h4 id="install-using-a-basic-kubernetes-deployment">Install using a basic Kubernetes deployment</h4>
+<details open="open">
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Install the InstantOn application but without the proper privileges:</p>
+<pre><code>oc create deployment libertydiag --image=quay.io/ibm/libertydiag:instanton
+</code></pre>
+</li>
+<li>
+<p>Wait two minutes for the application to initialize (the namespace may have limited CPU, so startup can take a while)</p>
+</li>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                           READY   STATUS    RESTARTS   AGE
+libertydiag-596cc64bdd-rdj62   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Print the logs of the pod by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc logs $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc logs libertydiag-596cc64bdd-rdj62
+</code></pre>
+</li>
+<li>
+<p>Scroll to the top of the output and observe various errors. In particular, the <code>CWWKE0957I</code> message confirms that InstantOn failed to load and that Liberty will load without InstantOn.</p>
+<pre><code>/opt/ol/wlp/bin/server: line 1458: /opt/ol/wlp/output/defaultServer/workarea/checkpoint/restoreTime: Permission denied
+/opt/ol/wlp/bin/server: line 1474: /opt/ol/wlp/output/defaultServer/workarea/checkpoint/.env.properties: Permission denied
+/opt/ol/wlp/bin/server: line 1413: /usr/sbin/criu: Operation not permitted
+CWWKE0957I: Restoring the checkpoint server process failed. Check the /logs/checkpoint/restore.log log to determine why the checkpoint process was not restored. Launching the server without using the checkpoint image.
+</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="step-2-clean-up">Step 2: Clean-up</h3>
+<p>Clean-up the resources.</p>
+<details open="open">
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Delete the deployment:</p>
+<pre><code>oc delete deployment libertydiag
+</code></pre>
+</li>
+<li>
+<p>Delete the ServiceAccount:</p>
+<pre><code>oc delete serviceaccount privilegedserviceaccount
+</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="summary_1">Summary</h3>
+<p>In summary, this lab demonstrated what to look for if InstantOn fails to load. Most commonly, this means that privileges are missing.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_liberty_java_oome/" class="btn btn-neutral float-left" title="Java OutOfMemoryErrors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_basics_openshift_health/" class="btn btn-neutral float-right" title="Health of the cluster">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_liberty_java_oome/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_basics_openshift_health/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

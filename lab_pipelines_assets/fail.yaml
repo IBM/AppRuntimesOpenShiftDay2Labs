@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: failing-task
+spec:
+  params:
+    - name: appName
+      type: string
+  steps:
+    - command:
+        - /bin/bash
+        - '-c'
+        - exit 2
+      image: registry.redhat.io/ubi7/ubi-minimal
+      name: 'failingtask'
+      resources: {}
+

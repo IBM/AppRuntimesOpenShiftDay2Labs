@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Application logs - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Application logs";
+        var mkdocs_page_input_path = "lab_liberty_applogs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>WebSphere Liberty on OpenShift &raquo;</li>
+      <li>Application logs</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-reviewing-openshift-application-logs">Lab: Reviewing OpenShift Application Logs</h1>
+<p>This lab covers how to review application logs in an OpenShift environment. </p>
+<h2 id="theory">Theory</h2>
+<p>There are multiple ways to review application logs in an OpenShift environment:</p>
+<ol>
+<li>Using the <code>oc</code> command line client:<ol>
+<li>View the native logs of the pod through the <code>oc logs</code> command.</li>
+<li>View log files within a pod by starting a remote shell using the <code>oc rsh</code> command.</li>
+<li>Download log files from a pod using the <code>oc cp</code> command.</li>
+</ol>
+</li>
+<li>Using the OpenShift web console:<ol>
+<li>View and/or download the native logs of the pod through the <code>Logs</code> tab on a pod.</li>
+<li>View log files within a pod through the <code>Terminal</code> tab on a pod.</li>
+</ol>
+</li>
+<li>Publish native logs of pods to <a href="https://docs.openshift.com/container-platform/latest/logging/cluster-logging-deploying.html">OpenShift centralized logging</a> using, most commonly, <a href="https://github.com/OpenLiberty/open-liberty-operator/blob/main/doc/observability-deployment.adoc#how-to-analyze-open-liberty-logs">EFK</a>, and then search logs in the Kibana log viewer. Optionally install <a href="https://github.com/WASdev/sample.dashboards">sample Kibana dashboards</a> created by the WebSphere team that summarize application log events and statistics.</li>
+<li>Gather a Liberty server dump using the WebSphere Liberty Operator that includes Liberty log files.</li>
+</ol>
+<hr />
+<h2 id="lab-review-logs-with-the-command-line-client-or-the-openshift-web-console-pod-page">Lab: Review logs with the command line client or the OpenShift web console pod page</h2>
+<p>This lab will demonstrate how to review both application native logs (equivalent to the Liberty <code>console.log</code>) and the Liberty <code>messages.log</code> using the <code>oc</code> command line client or the OpenShift web console pod page.</p>
+<p>This lab will take approximately 15 minutes.</p>
+<h3 id="step-1-install-example-application">Step 1: Install example application</h3>
+<p><a href="../lab_liberty_install_app/">Install the sample application</a>.</p>
+<h3 id="step-2-review-application-logs">Step 2: Review Application Logs</h3>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Print the native logs of the pod by replacing <code>$POD</code> with the pod name from the previous command. The native logs are equivalent to the Liberty <code>console.log</code> in a non-cloud deployment.</p>
+<pre><code>oc logs $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc logs libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Open a shell into the pod by replacing <code>$POD</code> with the pod name from the previous command:</p>
+<pre><code>oc rsh -t $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc rsh -t libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code> to print the full Liberty <code>messages.log</code>:</p>
+<pre><code>cat /logs/messages.log
+</code></pre>
+</li>
+<li>
+<p>Alternatively, if you want to download a file to your computer, exit out of the <code>rsh</code> session and download <code>messages.log</code> by replacing <code>$POD</code> with the pod name from the previous command:</p>
+<pre><code>oc cp $POD:/logs/messages.log messages.log
+</code></pre>
+<p>For example:</p>
+<pre><code>oc cp libertydiag-b98748954-mgj64:/logs/messages.log messages.log
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on <code>View logs</code> for the one pod that's running. The <code>View logs</code> output is equivalent to the Liberty <code>console.log</code> in a non-cloud deployment.<br />
+<img alt="" src="../images/podviewlogs.png" /></li>
+<li>You can also download the native logs using the Download button:<br />
+<img alt="" src="../images/downloadnativelogs.png" /></li>
+<li>Note that the browser can only download native logs; it cannot download arbitrary logs from the container filesystem. Instead, you can <code>cat</code> the logs through the <code>Terminal</code>.</li>
+<li>Click on the <code>Terminal</code> tab to open a remote shell into the running container in the pod:<br />
+<img alt="" src="../images/pod_terminal.png" /></li>
+<li>Copy and paste the following command and press <code>Enter</code> to print the full Liberty <code>messages.log</code>:
+   <code>cat /logs/messages.log</code></li>
+</ol>
+</details>
+<h3 id="summary">Summary</h3>
+<p>In summary, this lab demonstrated how to install a sample application and review its logs.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_basics_containers/" class="btn btn-neutral float-left" title="Kubernetes basics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_liberty_diagnostic_trace/" class="btn btn-neutral float-right" title="Diagnostic trace">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_basics_containers/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_liberty_diagnostic_trace/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

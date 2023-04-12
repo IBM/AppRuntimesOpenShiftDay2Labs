@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Lab cluster administration - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Lab cluster administration";
+        var mkdocs_page_input_path = "lab_administration.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Appendix &raquo;</li>
+      <li>Lab cluster administration</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-cluster-administration">Lab Cluster Administration</h1>
+<p>This page is for those that are installing or managing an OpenShift cluster for this lab.</p>
+<h2 id="openshift-cluster-preparation">OpenShift Cluster Preparation</h2>
+<ol>
+<li>These labs currently only support an x86_64/amd64 OpenShift cluster.</li>
+<li>Install the WebSphere Liberty Operator:<ol>
+<li>Add the <a href="https://www.ibm.com/docs/en/cloud-paks/1.0?topic=clusters-adding-operator-catalog">IBM operator catalog</a></li>
+<li><a href="https://www.ibm.com/docs/en/was-liberty/base?topic=operator-installing-red-hat-openshift-cli">Install the operator with oc in AllNamespaces</a></li>
+</ol>
+</li>
+<li>If you would like to support the labs that require <code>cluster-admin</code> permissions such as <a href="../lab_basics_openshift_health/">Health of the cluster</a>, etc.:<ol>
+<li>If you are just running the lab yourself, you can just use any user with <code>cluster-admin</code> authority (e.g. <code>kubeadmin</code>)</li>
+<li>If you would like to create a set of administrator users, review the <a href="#cluster-admin-group-configuration-steps">cluster-admin group configuration steps</a>.</li>
+</ol>
+</li>
+<li>If instead of <code>cluster-admin</code> users, you want normal users, review the <a href="#normal-users-configuration-steps">normal users configuration steps</a>.</li>
+<li>If you would like to create a namespace for each user to use which has quotas, review the <a href="#namespaces-with-quotas-configuration-steps">namespaces with quotas configuration steps</a>.</li>
+<li>The cluster is now ready for students to use <a href="../">the lab</a>.</li>
+</ol>
+<hr />
+<h2 id="cluster-admin-group-configuration-steps">Cluster-admin group configuration steps</h2>
+<ol>
+<li>Log in as a user with <code>cluster-admin</code> access into the OpenShift web console</li>
+<li>Go to <code>User Management</code> } <code>Groups</code></li>
+<li>Click <code>Create Group</code></li>
+<li>Set <code>name: admingroup</code></li>
+<li>
+<p>Remove the <code>users</code> section as we will add users later:</p>
+<pre><code>  users:
+    - user1
+    - user2
+</code></pre>
+</li>
+<li>
+<p>Click <code>Create</code></p>
+</li>
+<li>Click <code>RoleBindings</code></li>
+<li>Click <code>Create binding</code></li>
+<li>Select <code>ClusterRoleBinding</code></li>
+<li>Set Name to <code>admingroupclusteradminbinding</code></li>
+<li>Set Role name to <code>cluster-admin</code></li>
+<li>Click <code>Create</code></li>
+<li>
+<p>Create one or more admin users:</p>
+<ol>
+<li>
+<p>Generate a random password:</p>
+<pre><code>cat /dev/random | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 22 | head -n 1
+</code></pre>
+</li>
+<li>
+<p>Create/update a user password file. Replace <code>$PASSWORD</code> with the output from the previous step and update <code>adminuser1</code> with the user name you'd like. For all but the first user, remove the <code>-c</code> flag.</p>
+<pre><code>htpasswd -c -B -b adminusers.htpasswd adminuser1 $PASSWORD
+</code></pre>
+</li>
+<li>
+<p>Remember this user name and password combination somewhere.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>In the OpenShift web console, go to Administration } Cluster Settings } Configuration } OAuth</p>
+</li>
+<li>Identity providers } Add } HTPasswd</li>
+<li>Name: <code>Administrators</code></li>
+<li>Browser } adminusers.htpasswd file created above</li>
+<li>Click <code>Add</code></li>
+<li>Click <code>View authentication conditions for reconfiguration status.</code></li>
+<li>Wait until "All is well"</li>
+<li>Go to <code>User Management</code> } <code>Groups</code></li>
+<li>Click <code>admingroup</code></li>
+<li>Actions } Add Users</li>
+<li>Add all the users created above and click <code>Save</code></li>
+</ol>
+<h2 id="normal-users-configuration-steps">Normal users configuration steps</h2>
+<ol>
+<li>
+<p>Create one or more normal users:</p>
+<ol>
+<li>
+<p>Generate a random password:</p>
+<pre><code>cat /dev/random | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 22 | head -n 1
+</code></pre>
+</li>
+<li>
+<p>Create/update a user password file. Replace <code>$PASSWORD</code> with the output from the previous step and update <code>normaluser1</code> with the user name you'd like. For all but the first user, remove the <code>-c</code> flag.</p>
+<pre><code>htpasswd -c -B -b normalusers.htpasswd normaluser1 $PASSWORD
+</code></pre>
+</li>
+<li>
+<p>Remember this user name and password combination somewhere.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>In the OpenShift web console, go to Administration } Cluster Settings } Configuration } OAuth</p>
+</li>
+<li>Identity providers } Add } HTPasswd</li>
+<li>Name: <code>Normal Users</code></li>
+<li>Browser } normalusers.htpasswd file created above</li>
+<li>Click <code>Add</code></li>
+<li>Click <code>View authentication conditions for reconfiguration status.</code></li>
+<li>Wait until "All is well"</li>
+</ol>
+<h2 id="namespaces-with-quotas-configuration-steps">Namespaces with quotas configuration steps</h2>
+<p>First, figure out your worker node capacity; for example:</p>
+<pre><code>$ for i in $(seq 0 2); do echo &quot;worker${i}&quot;; oc describe node worker${i}.example.com | grep -A 6 Capacity:; done
+worker0
+Capacity:
+  cpu:                8
+  ephemeral-storage:  261608428Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16015788Ki
+  pods:               250
+worker1
+Capacity:
+  cpu:                8
+  ephemeral-storage:  261608428Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16015780Ki
+  pods:               250
+worker2
+Capacity:
+  cpu:                8
+  ephemeral-storage:  261608428Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16015788Ki
+  pods:               250
+</code></pre>
+<p>Next, figure out baseline worker node resource usage; for example:</p>
+<pre><code>$ for i in $(seq 0 2); do oc describe node worker${i}.example.com | grep -A 5 &quot;Allocated resources:&quot;; done
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                504m (6%)     0 (0%)
+  memory             2400Mi (16%)  0 (0%)
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                417m (5%)     0 (0%)
+  memory             2286Mi (15%)  0 (0%)
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                748m (9%)     400m (5%)
+  memory             1718Mi (11%)  512Mi (3%)
+</code></pre>
+<p>Subtract the baseline usage from the capacity and subtract some buffer space and that leaves you with an approximate amount of room on your worker nodes.</p>
+<p>Each student is expected to need no more than 1 CPUs and 2GB RAM.</p>
+<p>Based on this capacity planning, create up to the maximum number of users as described in the other sections.</p>
+<p>Finally, create the quotas:</p>
+<ol>
+<li>
+<p>Create a namespace for a user; for example, replace <code>adminuser1-namespace</code> with the namespace name:</p>
+<pre><code>oc create namespace adminuser1-namespace
+</code></pre>
+</li>
+<li>
+<p>Create a <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">ResourceQuota</a> on the namespace; for example, replace <code>adminuser1-resourcequota</code> with a user-specific name, replace <code>adminuser1-namespace</code> with the namespace name, and replace the <code>limits.cpu</code> and <code>limits.memory</code> if needed:</p>
+<pre><code>printf '{"apiVersion":"v1","kind":"ResourceQuota","metadata":{"name":"%s","namespace":"%s"},"spec":{"hard":{"requests.cpu":"10m","requests.memory":"10Ki","limits.cpu":"1001m","limits.memory":"2Gi"}}}' adminuser1-resourcequota adminuser1-namespace | oc create -f -
+</code></pre>
+</li>
+<li>
+<p>Create a <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">LimitRange</a> to control the quota for each pod that doesn't have specified limits; for example, replace <code>adminuser1-limitrange</code> with a user-specific name, replace <code>adminuser1-namespace</code> with the namespace name, and replace the limits in <code>default</code> if needed:</p>
+<pre><code>printf '{"apiVersion":"v1","kind":"LimitRange","metadata":{"name":"%s","namespace":"%s"},"spec":{"limits":[{"defaultRequest":{"cpu":"1m","memory":"1Ki"},"default":{"cpu":"500m","memory":"1Gi"},"type":"Container"}]}}' adminuser1-limitrange adminuser1-namespace | oc create -f -
+</code></pre>
+</li>
+</ol>
+<h3 id="automating-quota-creation">Automating quota creation</h3>
+<pre><code>USERS=30
+for USER in $(seq 1 $USERS); do oc create namespace adminuser${USER}-namespace &amp;&amp; printf '{&quot;apiVersion&quot;:&quot;v1&quot;,&quot;kind&quot;:&quot;ResourceQuota&quot;,&quot;metadata&quot;:{&quot;name&quot;:&quot;%s&quot;,&quot;namespace&quot;:&quot;%s&quot;},&quot;spec&quot;:{&quot;hard&quot;:{&quot;requests.cpu&quot;:&quot;10m&quot;,&quot;requests.memory&quot;:&quot;10Ki&quot;,&quot;limits.cpu&quot;:&quot;1001m&quot;,&quot;limits.memory&quot;:&quot;2Gi&quot;}}}' adminuser${USER}-resourcequota adminuser${USER}-namespace | oc create -f - &amp;&amp; printf '{&quot;apiVersion&quot;:&quot;v1&quot;,&quot;kind&quot;:&quot;LimitRange&quot;,&quot;metadata&quot;:{&quot;name&quot;:&quot;%s&quot;,&quot;namespace&quot;:&quot;%s&quot;},&quot;spec&quot;:{&quot;limits&quot;:[{&quot;defaultRequest&quot;:{&quot;cpu&quot;:&quot;1m&quot;,&quot;memory&quot;:&quot;1Ki&quot;},&quot;default&quot;:{&quot;cpu&quot;:&quot;500m&quot;,&quot;memory&quot;:&quot;1Gi&quot;},&quot;type&quot;:&quot;Container&quot;}]}}' adminuser${USER}-limitrange adminuser${USER}-namespace | oc create -f -; done
+</code></pre>
+<h3 id="automating-destroying-namespaces">Automating destroying namespaces</h3>
+<pre><code>USERS=30
+for USER in $(seq 1 $USERS); do oc delete namespace adminuser${USER}-namespace; done
+</code></pre>
+<h2 id="updating-an-htpasswd-file">Updating an htpasswd file</h2>
+<ol>
+<li>In the OpenShift web console, go to Administration } Cluster Settings } Configuration } OAuth</li>
+<li>Click on the <code>YAML</code> tab</li>
+<li>
+<p>Find the section with the target htpasswd name (e.g. <code>Administrators</code>, <code>Normal Users</code>, etc.); for example:</p>
+<pre><code>    - htpasswd:
+        fileData:
+          name: htpasswd-zxf8q
+      mappingMethod: claim
+      name: Administrators
+      type: HTPasswd
+</code></pre>
+</li>
+<li>
+<p>In the output above, under <code>fileData</code>, take the <code>name</code> field value.</p>
+</li>
+<li>
+<p>Replace <code>$NAME</code> both times in:</p>
+<pre><code>oc get secret $NAME -ojsonpath={.data.htpasswd} -n openshift-config | base64 --decode &gt; $NAME.htpasswd
+</code></pre>
+</li>
+<li>
+<p>Add more users as describe in previous sections</p>
+</li>
+<li>
+<p>Update the htpasswd file, replacing <code>$NAME</code> as above:</p>
+<pre><code>oc create secret generic $NAME --from-file=htpasswd=$NAME.htpasswd --dry-run=client -o yaml -n openshift-config | oc replace -f -
+</code></pre>
+</li>
+<li>
+<p>If users should be in a group (e.g. <code>Administrators</code>), add any new users to that group as per previous instructions.</p>
+</li>
+<li>If users need a namespace with a quota, create a namesapce as per previous instructions.</li>
+</ol>
+<hr />
+<h2 id="clean-up">Clean up</h2>
+<p>To start a lab from scratch, clean up a namespace as follows.</p>
+<h3 id="clean-up-current-namespace">Clean up current namespace</h3>
+<pre><code>oc delete wltrace libertytrace1
+oc delete wldump libertydump1
+oc delete webspherelibertyapplication --all
+oc delete deployment libertydiag
+oc delete serviceaccount privilegedserviceaccount
+</code></pre>
+<h3 id="clean-up-a-specific-namespace">Clean up a specific namespace</h3>
+<p>Replace <code>$NAMESPACE</code> with the target namespace. Some of these commands will return errors if such resources no longer exist, and that is expected.</p>
+<pre><code>oc delete wltrace libertytrace1 --namespace $NAMESPACE
+oc delete wldump libertydump1 --namespace $NAMESPACE
+oc delete webspherelibertyapplication --all --namespace $NAMESPACE
+oc delete deployment libertydiag --namespace $NAMESPACE
+oc delete serviceaccount privilegedserviceaccount --namespace $NAMESPACE
+</code></pre>
+<h3 id="automating-cleaning-up-namespaces">Automating cleaning up namespaces</h3>
+<pre><code>oc delete wltrace --all --all-namespaces
+oc delete wldump --all --all-namespaces
+oc delete webspherelibertyapplication --all --all-namespaces
+USERS=30
+for USER in $(seq 1 $USERS); do oc delete all --all --namespace adminuser${USER}-namespace; oc delete serviceaccount privilegedserviceaccount --namespace adminuser${USER}-namespace; done
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_liberty_uninstall_app/" class="btn btn-neutral float-left" title="Uninstall Sample Liberty Application"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_liberty_uninstall_app/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

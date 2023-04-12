@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Diagnostic trace - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Diagnostic trace";
+        var mkdocs_page_input_path = "lab_liberty_diagnostic_trace.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>WebSphere Liberty on OpenShift &raquo;</li>
+      <li>Diagnostic trace</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-diagnostic-trace">Lab: Diagnostic Trace</h1>
+<p>This lab covers how to enable and review diagnostic trace for a sample Liberty application in OpenShift.</p>
+<h2 id="theory">Theory</h2>
+<p>There are multiple ways to enable diagnostic trace in Liberty in an OpenShift environment:</p>
+<ol>
+<li>Add a <code>&lt;logging traceSpecification=... /&gt;</code> section to <code>server.xml</code> or add a configuration drop-in. This only works if <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=manually-controlling-dynamic-updates">runtime configuration updates</a> are enabled, as they are by default.</li>
+<li>If the application is installed using the WebSphere Liberty Operator, the <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=resources-webspherelibertytrace-custom-resource">WebSphereLibertyTrace custom resource</a> may be used to enable and disable trace. This only works if <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=manually-controlling-dynamic-updates">runtime configuration updates</a> are enabled, as they are by default, if the <code>WebSphereLibertyApplication</code> custom resource has the proper <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=resources-webspherelibertytrace-custom-resource"><code>openliberty.io/day2operations</code> annotation</a>, and if the container has a <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=operator-storage-serviceability"><code>/serviceability</code> directory</a>.</li>
+<li>An application image may be re-built and re-deployed with an additional <code>&lt;logging traceSpecification=... /&gt;</code> section in <code>server.xml</code> or using a configuration drop-in.</li>
+</ol>
+<p>There are various well-known <a href="https://www.ibm.com/support/pages/set-trace-and-get-full-dump-websphere-liberty">diagnostic trace specifications for WebSphere Liberty</a>.</p>
+<h2 id="labs">Labs</h2>
+<p>Choose one or more labs:</p>
+<ol>
+<li><a href="#lab-http-diagnostic-trace-by-adding-a-configuration-dropin">Lab: HTTP Diagnostic Trace by adding a configuration dropin</a></li>
+<li><a href="#lab-http-diagnostic-trace-through-the-websphere-liberty-operator">Lab: HTTP Diagnostic Trace through the WebSphere Liberty Operator</a></li>
+</ol>
+<hr />
+<h2 id="lab-http-diagnostic-trace-by-adding-a-configuration-dropin">Lab: HTTP Diagnostic Trace by adding a configuration dropin</h2>
+<p>This lab will enable HTTP diagnostic trace by adding a configuration dropin with a trace specification.</p>
+<p>This lab will take approximately 10 minutes.</p>
+<h3 id="step-1-install-example-application">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a>. If you installed it in a previous lab, you may continue using the previous installation.</p>
+<h3 id="step-2-configure-diagnostic-trace">Step 2: Configure diagnostic trace</h3>
+<p>Now that the application is installed and running, you will configure diagnostic trace. You will be modifying a running pod. In some real-world cases, this may be infeasible and the image will need to be re-built and re-deployed with the updated configuration.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Open a shell into the pod by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc rsh -t $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc rsh -t libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code>. Liberty will dynamically update the diagnostic trace configuration in the server.</p>
+</li>
+</ol>
+<pre><code>echo '&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;server&gt;&lt;logging traceSpecification=&quot;*=info:com.ibm.ws.webcontainer*=all:com.ibm.wsspi.webcontainer*=all:HTTPChannel=all:GenericBNF=all:HTTPDispatcher=all&quot; maxFileSize=&quot;100&quot; maxFiles=&quot;10&quot; /&gt;&lt;/server&gt;' &gt; /config/configDropins/overrides/trace.xml
+</code></pre>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on the one pod that's running:<br />
+<img alt="" src="../images/topology_selectpod.png" /></li>
+<li>Click on the <code>Terminal</code> tab to open a remote shell into the running container in the pod:<br />
+<img alt="" src="../images/pod_terminal.png" /></li>
+<li>Copy and paste the following command and press <code>Enter</code>. Liberty will dynamically update the diagnostic trace configuration in the server.</li>
+</ol>
+<pre><code>echo '&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;server&gt;&lt;logging traceSpecification=&quot;*=info:com.ibm.ws.webcontainer*=all:com.ibm.wsspi.webcontainer*=all:HTTPChannel=all:GenericBNF=all:HTTPDispatcher=all&quot; maxFileSize=&quot;100&quot; maxFiles=&quot;10&quot; /&gt;&lt;/server&gt;' &gt; /config/configDropins/overrides/trace.xml
+</code></pre>
+</details>
+<h3 id="step-3-exercise-an-http-request">Step 3: Exercise an HTTP request</h3>
+<p>Now that HTTP diagnostic trace is configured, you will simulate an HTTP request to Liberty.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to simulate an HTTP request:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:  </p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/Sleep"
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/Sleep"
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on the <code>/servlet/Sleep</code> link from the libertydiag application homepage:<br />
+<img alt="" src="../images/sleepservlet.png" /></li>
+</ol>
+</details>
+<h3 id="step-4-disable-diagnostic-trace">Step 4: Disable diagnostic trace</h3>
+<p>Now that the diagnostic trace has been captured, you will learn how to disable the diagnostic trace.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Open a shell into the pod by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc rsh -t $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc rsh -t libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code>. Liberty will dynamically update the diagnostic trace configuration in the server back to its original value.</p>
+<pre><code>rm /config/configDropins/overrides/trace.xml
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on the one pod that's running:<br />
+<img alt="" src="../images/topology_selectpod.png" /></li>
+<li>Click on the <code>Terminal</code> tab to open a remote shell into the running container in the pod:<br />
+<img alt="" src="../images/pod_terminal.png" /></li>
+<li>Copy and paste the following command and press <code>Enter</code>. Liberty will dynamically update the diagnostic trace configuration in the server back to its original value.<pre><code>rm /config/configDropins/overrides/trace.xml
+</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="step-5-download-trace-logs">Step 5: Download trace logs</h3>
+<p>Download trace logs to your workstation.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-ddf5f95b6-wj6dm   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Download the logs by replacing <code>$POD</code> with a pod name from above. Note that <code>oc cp</code> does not support wildcards so the whole directory (or a single file) must be downloaded.</p>
+<pre><code>oc cp $POD:/logs .
+</code></pre>
+<p>For example:</p>
+<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/logs .
+</code></pre>
+</li>
+<li>
+<p>You should be able to find the <code>Sleep</code> request executed above; for example:</p>
+<pre><code>[1/3/23 16:48:19:462 UTC] 0000006d id=00000000 com.ibm.ws.webcontainer.servlet.ServletWrapper               &gt; handleRequest ServletWrapper[com.example.servlet.Sleep:[/servlet/Sleep]] ,request-&gt; com.ibm.ws.webcontainer40.srt.SRTServletRequest40@20a8494e ,response-&gt; com.ibm.ws.webcontainer40.srt.SRTServletResponse40@86c16c72 ENTRY
+
+[1/3/23 16:48:19:473 UTC] 0000006d id=00000000 com.example.util.BaseServlet                                 I libertydiag: Invoking com.example.servlet.Sleep by anonymous (10.254.20.1)... []
+
+[1/3/23 16:48:20:482 UTC] 0000006d id=00000000 com.example.util.BaseServlet                                 I libertydiag: Done com.example.servlet.Sleep
+
+[1/3/23 16:48:20:495 UTC] 0000006d id=7d221183 com.ibm.ws.webcontainer.osgi.DynamicVirtualHost              3 Webcontainer handleRequest complete for--&gt; [/servlet/Sleep], mapped webApp context [com.ibm.ws.webcontainer40.osgi.webapp.WebApp40@35a6e71f[libertydiag#libertydiag.war]], inboundConnection --&gt; [com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink@22dbf0bd], this --&gt; com.ibm.ws.webcontainer.osgi.DynamicVirtualHost$2@7d221183
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>Files other than native logs (equivalent to Liberty's <code>console.log</code>) cannot be downloaded through the browser. You must use the command line steps above. Alternatively, you may use the <code>Terminal</code> tab of the pod and <code>cat</code> the file in the browser.</p>
+</details>
+<h3 id="summary">Summary</h3>
+<p>In summary, this lab demonstrated how to configure HTTP diagnostic trace in Liberty, exercise a request, and download the trace logs.</p>
+<hr />
+<h2 id="lab-http-diagnostic-trace-through-the-websphere-liberty-operator">Lab: HTTP Diagnostic Trace through the WebSphere Liberty Operator</h2>
+<p>This lab will enable HTTP diagnostic trace using the WebSphere Liberty Operator with an example application and review the output.</p>
+<p>This lab will take approximately 10 minutes.</p>
+<h3 id="step-1-install-example-application_1">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a> using the WebSphere Liberty operator. If you installed it in a previous lab, you may continue using the previous installation. If you previously installed the sample using a basic Kubernetes deployment, then <a href="../lab_liberty_uninstall_app/">uninstall it</a> and <a href="../lab_liberty_install_app/">re-install</a> using the WebSphere Liberty operator.</p>
+<h3 id="step-2-configure-diagnostic-trace_1">Step 2: Configure diagnostic trace</h3>
+<p>Now that the application is installed and running, you will configure diagnostic trace using the <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=resources-webspherelibertytrace-custom-resource">WebSphere Liberty Operator trace custom resource</a>.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Create a <code>trace.yaml</code> file, replacing <code>$POD</code> with the name of the pod from the previous command (e.g. <code>libertydiag-b98748954-mgj64</code>):</p>
+<pre><code>apiVersion: liberty.websphere.ibm.com/v1
+kind: WebSphereLibertyTrace
+metadata:
+  name: libertytrace1
+  annotations:
+    day2operation.openliberty.io/targetKinds: Pod
+spec:
+  license:
+    accept: true
+  podName: $POD
+  traceSpecification: "*=info:com.ibm.ws.webcontainer*=all:com.ibm.wsspi.webcontainer*=all:HTTPChannel=all:GenericBNF=all:HTTPDispatcher=all"
+  maxFileSize: 100
+  maxFiles: 5
+  disable: false
+</code></pre>
+</li>
+<li>
+<p>Apply the YAML:</p>
+<pre><code>oc apply -f trace.yaml
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Ensure the perspective is set to <code>Developer</code> in the top left:<br />
+<img alt="" src="../images/developerperspective.png" /></li>
+<li>Set your current namespace/project to what you were provided. For example:<br />
+<img alt="" src="../images/selectproject.png" /></li>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then copy the name of the pod that's running:<br />
+<img alt="" src="../images/topology_selectpod.png" /></li>
+<li>Click <code>Operator Backed</code> on the <code>+Add</code> page:<br />
+<img alt="" src="../images/operatorbacked.png" /></li>
+<li>Click <code>WebSphereLibertyTrace</code> and then click <code>Create</code></li>
+<li>Expand <code>License</code> and check <code>accept</code></li>
+<li>Paste the pod name from the step above into the <code>podName</code> text box.</li>
+<li>
+<p>Set the <code>traceSpecification</code> to:</p>
+<pre><code>*=info:com.ibm.ws.webcontainer*=all:com.ibm.wsspi.webcontainer*=all:HTTPChannel=all:GenericBNF=all:HTTPDispatcher=all
+</code></pre>
+</li>
+<li>
+<p>Set <code>maxFileSize</code> to <code>100</code></p>
+</li>
+<li>Click <code>Create</code></li>
+</ol>
+</details>
+<h3 id="step-3-exercise-an-http-request_1">Step 3: Exercise an HTTP request</h3>
+<p>Now that HTTP diagnostic trace is configured, you will simulate an HTTP request to Liberty.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to simulate an HTTP request:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/Sleep"
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/Sleep"
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on the <code>/servlet/Sleep</code> link from the libertydiag application homepage:<br />
+<img alt="" src="../images/sleepservlet.png" /></li>
+</ol>
+</details>
+<h3 id="step-4-disable-diagnostic-trace_1">Step 4: Disable diagnostic trace</h3>
+<p>Now that the diagnostic trace has been captured, you will learn how to disable the diagnostic trace.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List <code>WebSphereLibertyTrace</code> custom resources; for example:</p>
+<pre><code>oc get wltrace
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME            PODNAME                      TRACING
+libertytrace1   libertydiag-5fdf699f-sfwqn   True
+</code></pre>
+</li>
+<li>
+<p>Delete the custom resource you created earlier; for example:</p>
+<pre><code>oc delete wltrace libertytrace1
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on <code>Search</code>, click the <code>Resources</code> drop down, search for <code>trace</code>, check <code>WebSphereLibertyTrace</code>, click the vertical ellipses next to the custom resource created earlier, click <code>Delete WebSphereLibertyTrace</code>, and click <code>Delete</code>:<br />
+<img alt="" src="../images/deletetrace.png" /></li>
+</ol>
+</details>
+<h3 id="step-5-download-trace-logs_1">Step 5: Download trace logs</h3>
+<p>Download trace logs to your workstation.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-ddf5f95b6-wj6dm   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Download the logs by replacing <code>$POD</code> with a pod name from above and <code>$NAMESPACE</code> with your namespace. Note that <code>oc cp</code> does not support wildcards so the whole directory (or a single file) must be downloaded.</p>
+<pre><code>oc cp $POD:/serviceability/$NAMESPACE/$POD/ .
+</code></pre>
+<p>For example:</p>
+<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/serviceability/user15-namespace/libertydiag-ddf5f95b6-wj6dm/ .
+</code></pre>
+</li>
+<li>
+<p>You should be able to find the <code>Sleep</code> request executed above; for example:</p>
+<pre><code>[1/3/23 16:48:19:462 UTC] 0000006d id=00000000 com.ibm.ws.webcontainer.servlet.ServletWrapper               &gt; handleRequest ServletWrapper[com.example.servlet.Sleep:[/servlet/Sleep]] ,request-&gt; com.ibm.ws.webcontainer40.srt.SRTServletRequest40@20a8494e ,response-&gt; com.ibm.ws.webcontainer40.srt.SRTServletResponse40@86c16c72 ENTRY
+
+[1/3/23 16:48:19:473 UTC] 0000006d id=00000000 com.example.util.BaseServlet                                 I libertydiag: Invoking com.example.servlet.Sleep by anonymous (10.254.20.1)... []
+
+[1/3/23 16:48:20:482 UTC] 0000006d id=00000000 com.example.util.BaseServlet                                 I libertydiag: Done com.example.servlet.Sleep
+
+[1/3/23 16:48:20:495 UTC] 0000006d id=7d221183 com.ibm.ws.webcontainer.osgi.DynamicVirtualHost              3 Webcontainer handleRequest complete for--&gt; [/servlet/Sleep], mapped webApp context [com.ibm.ws.webcontainer40.osgi.webapp.WebApp40@35a6e71f[libertydiag#libertydiag.war]], inboundConnection --&gt; [com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink@22dbf0bd], this --&gt; com.ibm.ws.webcontainer.osgi.DynamicVirtualHost$2@7d221183
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>Files other than native logs (equivalent to Liberty's <code>console.log</code>) cannot be downloaded through the browser. You must use the command line steps above. Alternatively, you may use the <code>Terminal</code> tab of the pod and <code>cat</code> the file in the browser.</p>
+</details>
+<h3 id="summary_1">Summary</h3>
+<p>In summary, this lab demonstrated how to configure HTTP diagnostic trace in Liberty using the WebSphere Liberty Operator, exercise a request, and download the trace logs.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_liberty_applogs/" class="btn btn-neutral float-left" title="Application logs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_liberty_high_cpu/" class="btn btn-neutral float-right" title="High CPU">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_liberty_applogs/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_liberty_high_cpu/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

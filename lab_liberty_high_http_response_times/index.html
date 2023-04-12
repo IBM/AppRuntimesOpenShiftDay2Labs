@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>High response times - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "High response times";
+        var mkdocs_page_input_path = "lab_liberty_high_http_response_times.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>WebSphere Liberty on OpenShift &raquo;</li>
+      <li>High response times</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lab-high-response-times">Lab: High Response Times</h1>
+<p>This lab covers how to investigate high HTTP response times for a sample Liberty application in OpenShift.</p>
+<h2 id="theory">Theory</h2>
+<p>There are many ways to track and review HTTP response times for Liberty in an OpenShift environment:</p>
+<ol>
+<li>Review response times exceeding a configured threshold using Liberty's <a href="https://openliberty.io/docs/latest/slow-hung-request-detection.html">slow and hung request detection</a></li>
+<li>Manually gather thread dumps during the issue by opening a terminal in the container and executing <code>kill -3 $PID</code></li>
+<li>If the application is installed using the WebSphere Liberty Operator, the <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=resources-webspherelibertydump-custom-resource">WebSphereLibertyDump custom resource</a> may be used to gather a <a href="https://openliberty.io/docs/latest/reference/command/server-dump.html">Liberty server dump</a> with a thread dump. This only works if the <code>WebSphereLibertyApplication</code> custom resource has the proper <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=resources-webspherelibertydump-custom-resource"><code>openliberty.io/day2operations</code> annotation</a>, and if the container has a <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=operator-storage-serviceability"><code>/serviceability</code> directory</a>.</li>
+<li>If you have <code>cluster-admin</code> permissions, use the <a href="https://www.ibm.com/support/pages/mustgather-performance-hang-or-high-cpu-issues-websphere-application-server-linux-containers">MustGather: Performance, hang, or high CPU issues with WebSphere Application Server on Linux on Containers</a> during the issue and search for repeating patterns in thread dumps</li>
+<li>Review individual HTTP response times with Liberty's <a href="https://openliberty.io/docs/latest/access-logging.html">HTTP access logging</a>, although this will not discover stack traces driving slow response times</li>
+<li>Review average and maximum response times with <a href="https://openliberty.io/docs/latest/reference/feature/mpMetrics.html">Eclipse MicroProfile Metrics</a> in Liberty (or <a href="https://docs.openshift.com/container-platform/latest/monitoring/managing-metrics.html">in an OpenShift Service</a>) integrated with <a href="https://www.ibm.com/docs/en/was-liberty/nd?topic=operator-monitoring-applications-red-hat-openshift">Prometheus and Grafana in OpenShift</a> or <a href="https://docs.openshift.com/container-platform/latest/monitoring/querying-metrics.html">direct queries with a ServiceMonitor</a>, although these techniques will not discover stack traces driving slow response times</li>
+<li>Review individual JAX-RS microservice response times with <a href="https://www.ibm.com/docs/en/was-liberty/core?topic=environment-enabling-distributed-tracing">Eclipse MicroProfile OpenTelemetry</a> (formerly OpenTracing) with Jaeger or Zipkin, although this will not discover stack traces driving slow response times</li>
+<li>Use third-party monitoring products such as <a href="https://www.instana.com/supported-technologies/websphere-liberty/">Instana</a></li>
+</ol>
+<p>This lab will only cover some of the above methods.</p>
+<h2 id="labs">Labs</h2>
+<p>Choose one or more labs:</p>
+<ol>
+<li><a href="#lab-response-times-exceeding-a-configured-threshold">Lab: Response times exceeding a configured threshold</a></li>
+<li><a href="#lab-gather-a-liberty-server-dump-through-the-websphere-liberty-operator">Lab: Gather a Liberty server dump through the WebSphere Liberty Operator</a></li>
+<li><a href="#lab-use-the-performancehanghigh-cpu-mustgather-on-linux-on-containers">Lab: Use the performance/hang/high CPU MustGather on Linux on Containers</a></li>
+<li>You could also gather thread dumps using <code>kill -3</code> as done in the <a href="../lab_liberty_high_cpu/#lab-manually-gather-thread-dumps-during-the-issue">High CPU lab</a>.</li>
+</ol>
+<hr />
+<h2 id="lab-response-times-exceeding-a-configured-threshold">Lab: Response times exceeding a configured threshold</h2>
+<p>This lab will use Liberty's <a href="https://openliberty.io/docs/latest/slow-hung-request-detection.html">slow and hung request detection</a> to print information about HTTP requests that exceed a configured threshold to logs.</p>
+<p>This method is generally used when there are intermittent HTTP response time spikes. For example, if the average response time is 5 seconds but users are experiencing intermittent response time spikes of 10 seconds that are unacceptable, then the threshold may be set to 9 seconds to investigate the spikes.</p>
+<p>This lab will demonstrate how to configure Liberty's <a href="https://openliberty.io/docs/latest/reference/config/requestTiming.html">requestTiming feature</a>, trigger it with an example application, and review the output.</p>
+<p>The major downside to this approach is that the performance overhead of <code>requestTiming</code> is non-constant. The overhead is proportional to the volume and complexity of requests which should be determined in a performance test environment before configuring <code>requestTiming</code> in production. The main way to reduce the performance overhead is to increase the <a href="https://openliberty.io/docs/latest/reference/config/requestTiming.html"><code>sampleRate</code></a> although any value greater than <code>1</code> creates a chance of missing some slow requests.</p>
+<p>In this lab, you will be using the <code>slowRequestThreshold</code> to trigger the details to the log. There is also a <code>hungRequestThreshold</code> that may be configured although it won't be covered in this lab. When <code>hungRequestThreshold</code> is breached, in addition to the same log message as with <code>slowRequestThreshold</code>, Liberty will take 3 thread dumps, one minute apart.</p>
+<p>This lab will take approximately 10 minutes.</p>
+<h3 id="step-1-install-example-application">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a>. If you installed it in a previous lab, you may continue using the previous installation.</p>
+<h3 id="step-2-configure-requesttiming">Step 2: Configure requestTiming</h3>
+<p>Now that the application is installed and running, you will configure <code>requestTiming</code> to trigger if an HTTP request takes longer than 9 seconds. You will be modifying a running pod. In some real-world cases, this may be infeasible and the image will need to be re-built and re-deployed with the updated configuration.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Open a shell into the pod by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc rsh -t $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc rsh -t libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code>. Liberty will dynamically update the <code>requestTiming</code> configuration in the server (assuming the feature is installed, which it usually is).</p>
+</li>
+</ol>
+<pre><code>echo '&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;server&gt;&lt;featureManager&gt;&lt;feature&gt;requestTiming-1.0&lt;/feature&gt;&lt;/featureManager&gt;&lt;requestTiming slowRequestThreshold=&quot;9s&quot; hungRequestThreshold=&quot;300s&quot; sampleRate=&quot;1&quot; /&gt;&lt;/server&gt;' &gt; /config/configDropins/overrides/requestTiming.xml
+</code></pre>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on the one pod that's running:<br />
+<img alt="" src="../images/topology_selectpod.png" /></li>
+<li>Click on the <code>Terminal</code> tab to open a remote shell into the running container in the pod:<br />
+<img alt="" src="../images/pod_terminal.png" /></li>
+<li>Copy and paste the following command and press <code>Enter</code>. Liberty will dynamically update the <code>requestTiming</code> configuration in the server (assuming the feature is installed, which it usually is).</li>
+</ol>
+<pre><code>echo '&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;server&gt;&lt;featureManager&gt;&lt;feature&gt;requestTiming-1.0&lt;/feature&gt;&lt;/featureManager&gt;&lt;requestTiming slowRequestThreshold=&quot;9s&quot; hungRequestThreshold=&quot;300s&quot; sampleRate=&quot;1&quot; /&gt;&lt;/server&gt;' &gt; /config/configDropins/overrides/requestTiming.xml
+</code></pre>
+</details>
+<h3 id="step-3-exercise-long-http-requests">Step 3: Exercise long HTTP requests</h3>
+<p>Now that <code>requestTiming</code> is configured, you will simulate HTTP requests to Liberty and some of them will exceed 9 seconds. This will be done by executing 5 concurrent users that sleep a random amount of time with an average of 5 seconds and a standard deviation of 4 seconds. This means that approximately 68% of requests will be between 1-9 seconds, and the remaining will be either below 1 seconds or above 9 seconds, thus simulating a situation where most requests are fine but a minority exceed the defined threshold.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to exercise long requests:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/LoadRunner?url=http%3A%2F%2Flocalhost%3A9080%2Fservlet%2FSleep%3Fmean%3D5000%26stddev%3D4000&amp;method=get&amp;entity=&amp;concurrentusers=5&amp;totalrequests=100&amp;user=&amp;password="
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/LoadRunner?url=http%3A%2F%2Flocalhost%3A9080%2Fservlet%2FSleep%3Fmean%3D5000%26stddev%3D4000&amp;method=get&amp;entity=&amp;concurrentusers=5&amp;totalrequests=100&amp;user=&amp;password="
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>Request the following web page from your terminal to check on the status of the run:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/loadrunner.jsp" | grep 'li&gt;Run'
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/loadrunner.jsp" | findstr 'li&gt;Run'
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>Keep executing the above command until you see that the <code>max execution</code> value exceeds <code>9000</code>. This means at least one request took more than 9 seconds. (In the statistically rare chance that this doesn't happen, start again at step 1).</p>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on the <code>Load Runner</code> link from the libertydiag application homepage:<br />
+<img alt="" src="../images/loadrunner.png" /></li>
+<li>
+<p>In the <code>Target URL</code>, copy and paste the following:</p>
+<pre><code>http://localhost:9080/servlet/Sleep?mean=5000&amp;stddev=4000
+</code></pre>
+</li>
+<li>
+<p>Scroll to the bottom and click <code>Start</code></p>
+</li>
+<li>You may refresh this page to check on the status of the run. Note that refreshing does not start a new run.<br />
+<img alt="" src="../images/loadrunner_sleep.png" /></li>
+<li>Keep refreshing until you see that the <code>max execution</code> value exceeds <code>9000</code>. This means at least one request took more than 9 seconds. (In the statistically rare chance that this doesn't happen, <code>Start</code> the load again.)</li>
+</ol>
+</details>
+<h3 id="step-4-review-data-on-long-http-requests">Step 4: Review data on long HTTP requests</h3>
+<p>Now you will review the logs to understand how to investigate slow HTTP requests.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Open a shell into the pod by replacing <code>$POD</code> with a pod name from the previous command:</p>
+<pre><code>oc rsh -t $POD
+</code></pre>
+<p>For example:</p>
+<pre><code>oc rsh -t libertydiag-b98748954-mgj64
+</code></pre>
+</li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code>:</p>
+<pre><code>cat /logs/messages.log
+</code></pre>
+</li>
+<li>
+<p>Scroll up until you find the <code>TRAS0112W</code> warning message signifying that an HTTP request exceeded the <code>requestTiming</code> configured threshold. For example:</p>
+<pre><code>[11/1/22 20:02:12:053 UTC] 00000074 com.ibm.ws.request.timing.manager.SlowRequestManager         W TRAS0112W: Request AAPj5+4YXW3_AAAAAAAAAB5 has been running on thread 00000071 for at least 9000.263ms. The following stack trace shows what this thread is currently running.
+
+      at java.lang.Thread.sleepImpl(Native Method)
+      at java.lang.Thread.sleep(Thread.java:977)
+      at java.lang.Thread.sleep(Thread.java:960)
+      at com.example.servlet.Sleep.doSleep(Sleep.java:79)
+      at com.example.servlet.Sleep.doWork(Sleep.java:40)
+      at com.example.util.BaseServlet.service(BaseServlet.java:104)
+      at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
+      [...]
+
+The following table shows the events that have run during this request.
+
+Duration     Operation
+9001.583ms + websphere.servlet.service | libertydiag | com.example.servlet.Sleep?mean=5000&amp;stddev=4000
+</code></pre>
+</li>
+<li>
+<p>The warning message notes how long the request had been running at the time of the warning (<code>9000.263ms</code>) followed by a stack trace of what the thread was doing. The stack trace is the main symptom that suggests where the slow-down may be. In this example, the application (<code>com.example[...]</code>) is calling <code>Thread.sleep</code> which is causing the delay. Below the stack trace, Liberty prints a table showing any events leading up to the time the threshold was exceeded. In this case, the only event is the HTTP request itself which shows the servlet and its parameters. If the application performed other work such as database queries, these would be shown along with their SQLs.</p>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Open the <code>Terminal</code> for the application pod in the OpenShift web console as you did in <a href="#step-2-configure-requesttiming">Step 2</a> above.</li>
+<li>
+<p>Copy and paste the following command and press <code>Enter</code>:</p>
+<pre><code>cat /logs/messages.log
+</code></pre>
+</li>
+<li>
+<p>Scroll up until you find the <code>TRAS0112W</code> warning message signifying that an HTTP request exceeded the <code>requestTiming</code> configured threshold. For example:</p>
+<pre><code>[11/1/22 20:02:12:053 UTC] 00000074 com.ibm.ws.request.timing.manager.SlowRequestManager         W TRAS0112W: Request AAPj5+4YXW3_AAAAAAAAAB5 has been running on thread 00000071 for at least 9000.263ms. The following stack trace shows what this thread is currently running.
+
+      at java.lang.Thread.sleepImpl(Native Method)
+      at java.lang.Thread.sleep(Thread.java:977)
+      at java.lang.Thread.sleep(Thread.java:960)
+      at com.example.servlet.Sleep.doSleep(Sleep.java:79)
+      at com.example.servlet.Sleep.doWork(Sleep.java:40)
+      at com.example.util.BaseServlet.service(BaseServlet.java:104)
+      at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
+      [...]
+
+The following table shows the events that have run during this request.
+
+Duration     Operation
+9001.583ms + websphere.servlet.service | libertydiag | com.example.servlet.Sleep?mean=5000&amp;stddev=4000
+</code></pre>
+</li>
+<li>
+<p>The warning message notes how long the request had been running at the time of the warning (<code>9000.263ms</code>) followed by a stack trace of what the thread was doing. The stack trace is the main symptom that suggests where the slow-down may be. In this example, the application (<code>com.example[...]</code>) is calling <code>Thread.sleep</code> which is causing the delay. Below the stack trace, Liberty prints a table showing any events leading up to the time the threshold was exceeded. In this case, the only event is the HTTP request itself which shows the servlet and its parameters. If the application performed other work such as database queries, these would be shown along with their SQLs.</p>
+</li>
+</ol>
+</details>
+<h3 id="step-5-download-liberty-logs">Step 5: Download Liberty logs</h3>
+<p>In many cases, you may want the full logs for review on your workstation.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-ddf5f95b6-wj6dm   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Download the Liberty <code>messages.log</code> by replacing <code>$POD</code> with a pod name from the previous command</p>
+<pre><code>oc cp $POD:/logs/messages.log messages.log
+</code></pre>
+<p>For example:</p>
+<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/logs/messages.log messages.log
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>Files other than native logs (equivalent to Liberty's <code>console.log</code>) cannot be downloaded through the browser. You must use the command line steps above. Alternatively, you may use the <code>Terminal</code> tab of the pod and <code>cat</code> the file in the browser.</p>
+</details>
+<h3 id="summary">Summary</h3>
+<p>In summary, this lab demonstrated how to configure Liberty's <code>requestTiming</code> to investigate HTTP requests that exceed a configured threshold. When this happens, Liberty prints a <code>TRAS0112W</code> warning to its logs with details about why the request may have been slow. When configuring <code>requestTiming</code>, it's advisable to use a monitoring tool to watch for this warning and send out alerts.</p>
+<p>The main drawback of <code>requestTiming</code> is that it has a non-constant overhead so it's generally advisable to performance test <code>requestTiming</code> in an environment with simulated load that mimics production to gauge the likely overhead before putting it into production, or increasing <code>sampleRate</code> to reduce the overhead.</p>
+<hr />
+<h2 id="lab-gather-a-liberty-server-dump-through-the-websphere-liberty-operator">Lab: Gather a Liberty server dump through the WebSphere Liberty Operator</h2>
+<p>This lab will show how to gather a Liberty server dump through the WebSphere Liberty Operator during a high response time issue.</p>
+<p>This lab will take approximately 10 minutes.</p>
+<h3 id="step-1-install-example-application_1">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a> using the WebSphere Liberty operator. If you installed it in a previous lab, you may continue using the previous installation. If you previously installed the sample using a basic Kubernetes deployment, then <a href="../lab_liberty_uninstall_app/">uninstall it</a> and <a href="../lab_liberty_install_app/">re-install</a> using the WebSphere Liberty operator.</p>
+<h3 id="step-2-exercise-long-http-requests">Step 2: Exercise long HTTP requests</h3>
+<p>Now you will simulate HTTP requests to Liberty and some of them will be long. This will be done by executing 5 concurrent users that sleep a random amount of time with an average of 5 seconds and a standard deviation of 25 seconds. This means that approximately 68% of requests will be less than 30 seconds, and the remaining will be above 30 seconds, thus simulating long requests.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to exercise long requests:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/LoadRunner?url=http%3A%2F%2Flocalhost%3A9080%2Fservlet%2FSleep%3Fmean%3D5000%26stddev%3D4000&amp;method=get&amp;entity=&amp;concurrentusers=5&amp;totalrequests=100&amp;user=&amp;password="
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/LoadRunner?url=http%3A%2F%2Flocalhost%3A9080%2Fservlet%2FSleep%3Fmean%3D5000%26stddev%3D4000&amp;method=get&amp;entity=&amp;concurrentusers=5&amp;totalrequests=100&amp;user=&amp;password="
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>Request the following web page from your terminal to check on the status of the run:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/loadrunner.jsp" | grep 'li&gt;Run'
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/loadrunner.jsp" | findstr 'li&gt;Run'
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on the <code>Load Runner</code> link from the libertydiag application homepage:<br />
+<img alt="" src="../images/loadrunner.png" /></li>
+<li>
+<p>In the <code>Target URL</code>, copy and paste the following:</p>
+<pre><code>http://localhost:9080/servlet/Sleep?mean=5000&amp;stddev=25000
+</code></pre>
+</li>
+<li>
+<p>Scroll to the bottom and click <code>Start</code></p>
+</li>
+</ol>
+</details>
+<h3 id="step-2-request-a-liberty-server-dump">Step 2: Request a Liberty server dump</h3>
+<p>You will gather a Liberty server dump using the <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=resources-webspherelibertydump-custom-resource">WebSphere Liberty Operator dump custom resource</a>.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-b98748954-mgj64   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Create a <code>dump.yaml</code> file, replacing <code>$POD</code> with the name of the pod from the previous command (e.g. <code>libertydiag-b98748954-mgj64</code>):</p>
+<pre><code>apiVersion: liberty.websphere.ibm.com/v1
+kind: WebSphereLibertyDump
+metadata:
+  name: libertydump1
+  annotations:
+    day2operation.openliberty.io/targetKinds: Pod
+spec:
+  license:
+    accept: true
+  podName: $POD
+  include:
+    - thread
+</code></pre>
+</li>
+<li>
+<p>Apply the YAML:</p>
+<pre><code>oc apply -f dump.yaml
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Ensure the perspective is set to <code>Developer</code> in the top left:<br />
+<img alt="" src="../images/developerperspective.png" /></li>
+<li>Set your current namespace/project to what you were provided. For example:<br />
+<img alt="" src="../images/selectproject.png" /></li>
+<li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then copy the name of the pod that's running:<br />
+<img alt="" src="../images/topology_selectpod.png" /></li>
+<li>Click <code>Operator Backed</code> on the <code>+Add</code> page:<br />
+<img alt="" src="../images/operatorbacked.png" /></li>
+<li>Click <code>WebSphereLibertyDump</code> and then click <code>Create</code></li>
+<li>Expand <code>License</code> and check <code>accept</code></li>
+<li>Paste the pod name from the step above into the <code>podName</code> text box.</li>
+<li>Expand <code>include</code> and since we only want a thread dump, click <code>Remove include</code> for the second, <code>Value=heap</code> section</li>
+<li>Click <code>Create</code></li>
+</ol>
+</details>
+<h3 id="step-3-wait-for-the-server-dump-to-complete">Step 3: Wait for the server dump to complete</h3>
+<p>Now that the server dump has been requested, you will check when the server dump has completed.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Use the <code>wait</code> command to wait for the dump to complete:</p>
+<pre><code>oc wait wldump libertydump1 --for condition=completed --timeout=5m
+</code></pre>
+<p>Example output:</p>
+<pre><code>webspherelibertydump.liberty.websphere.ibm.com/libertydump1 condition met
+</code></pre>
+</li>
+<li>
+<p>List <code>WebSphereLibertyDump</code> custom resources to get the final dump path:</p>
+<pre><code>oc get wldump
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME           STARTED   COMPLETED   DUMP FILE
+libertydump1   True      True        /serviceability/user15-namespace/libertydiag-b98748954-mgj64/2023-01-23_18:30:56.zip
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on <code>Search</code>, click the <code>Resources</code> drop down, search for <code>dump</code>, check <code>WebSphereLibertyDump</code>, click on the resource name created earlier, and wait until there is a <code>Completed=True</code> line in the <code>Conditions</code> section at the bottom:<br />
+<img alt="" src="../images/selectdump.png" /></li>
+<li>Click on the <code>YAML</code> tab and scroll down to find the <code>dumpFile</code> location:<br />
+<img alt="" src="../images/finddump.png" /></li>
+</ol>
+</details>
+<h3 id="step-4-download-the-server-dump">Step 4: Download the server dump</h3>
+<p>Download the server dump to your workstation.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>List the pods for the example application deployment; for example:</p>
+<pre><code>oc get pods
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+libertydiag-ddf5f95b6-wj6dm   1/1     Running   0          97s
+</code></pre>
+</li>
+<li>
+<p>Download the dump by replacing <code>$POD</code> with a pod name from above and <code>$DUMP</code> with the dump path from the previous step.</p>
+<pre><code>oc cp $POD:$DUMP dump.zip
+</code></pre>
+<p>For example:</p>
+<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/serviceability/user15-namespace/libertydiag-ddf5f95b6-wj6dm/2023-01-23_18:30:56.zip dump.zip
+</code></pre>
+</li>
+<li>
+<p>Expand the zip file and you should find lots of diagnostics including a <code>javacore*.txt</code> file in the root of the zip which will show thread stacks at the time of the dump. This should include simulated high response time threads; for example:</p>
+<pre><code>3XMTHREADINFO      "Default Executor-thread-1421" J9VMThread:0x00000000002BA800, omrthread_t:0x00007F8000006D50, java/lang/Thread:0x00000000FF943260, state:CW, prio=5
+3XMJAVALTHREAD            (java/lang/Thread getId:0x5D2, isDaemon:true)
+3XMJAVALTHRCCL            com/ibm/ws/classloading/internal/ThreadContextClassLoader(0x00000000E2169578)
+3XMTHREADINFO1            (native thread ID:0x71C, native priority:0x5, native policy:UNKNOWN, vmstate:CW, vm thread flags:0x00000481)
+3XMTHREADINFO2            (native stack address range from:0x00007F80424C1000, to:0x00007F8042501000, size:0x40000)
+3XMCPUTIME               CPU usage total: 0.015525339 secs, current category="Application"
+3XMHEAPALLOC             Heap bytes allocated since last GC cycle=0 (0x0)
+3XMTHREADINFO3           Java callstack:
+4XESTACKTRACE                at java/lang/Thread.sleepImpl(Native Method)
+4XESTACKTRACE                at java/lang/Thread.sleep(Thread.java:977)
+4XESTACKTRACE                at java/lang/Thread.sleep(Thread.java:960)
+4XESTACKTRACE                at com/example/servlet/Sleep.doSleep(Sleep.java:79) [...]
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>Files other than native logs (equivalent to Liberty's <code>console.log</code>) cannot be downloaded through the browser. You must use the command line steps above.</p>
+</details>
+<h3 id="step-5-clean-up">Step 5: Clean-up</h3>
+<p>Clean-up the server dump resource.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>Delete the <code>WebSphereLibertyDump</code> custom resource:<pre><code>oc delete wldump libertydump1
+</code></pre>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on <code>Search</code>, click the <code>Resources</code> drop down, search for <code>dump</code>, check <code>WebSphereLibertyDump</code>, click the vertical ellipses next to the custom resource created earlier, click <code>Delete WebSphereLibertyDump</code>, and click <code>Delete</code>.</li>
+</ol>
+</details>
+<h3 id="summary_1">Summary</h3>
+<p>In summary, this lab demonstrated how to gather a Liberty server dump for a WebSphere Liberty Operator-based application deployment during a simulated high response time issue.</p>
+<hr />
+<h2 id="lab-use-the-performancehanghigh-cpu-mustgather-on-linux-on-containers">Lab: Use the performance/hang/high CPU MustGather on Linux on Containers</h2>
+<p>This lab will use IBM Support's <a href="https://www.ibm.com/support/pages/mustgather-performance-hang-or-high-cpu-issues-websphere-application-server-linux-containers">MustGather: Performance, hang, or high CPU issues with WebSphere Application Server on Linux on Containers</a> to gather thread dumps showing any HTTP requests being processed. Any statistical patterns in thread stacks may be used to infer potential causes of high HTTP response times. This MustGather is publicly available and nearly the same as the <a href="https://www.ibm.com/support/pages/mustgather-performance-hang-or-high-cpu-issues-websphere-application-server-linux">standalone Linux performance/hang/high-CPU MustGather</a> in that it gathers CPU, memory, disk, network information, thread dumps, etc., and customers should be encouraged to use it if they can accept that it requires <code>cluster-admin</code> permissions to execute.</p>
+<p>This lab will demonstrate how to execute the MustGather, download the diagnostics, and review them in the free <a href="https://www.ibm.com/support/pages/ibm-thread-and-monitor-dump-analyzer-java-tmda">IBM Thread and Monitor Dump Analyzer (TMDA)</a> tool for potential causes of high HTTP response times.</p>
+<p><strong>Note</strong>: This lab requires that the user has <code>cluster-admin</code> permissions. A future version of the MustGather will not require administrator permissions.</p>
+<p>This lab will take approximately 15 minutes.</p>
+<h3 id="step-0-check-if-you-have-cluster-admin-permissions">Step 0: Check if you have cluster-admin permissions</h3>
+<p>These steps will show if you have <code>cluster-admin</code> permissions. If you do not, you must skip this lab.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Check if you have authority for all verbs on all resources:</p>
+<pre><code>oc auth can-i '*' '*'
+</code></pre>
+<p>Example output:</p>
+<pre><code>yes
+</code></pre>
+</li>
+<li>
+<p>If the answer is <code>no</code>, then you do not have <code>cluster-admin</code> permissions.</p>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Access your OpenShift web console at <code>https://console-openshift-console.$CLUSTER/</code>. Replace <code>$CLUSTER</code> with your OpenShift cluster domain.</li>
+<li>Ensure the perspective is set to <code>Administrator</code> in the top left:<br />
+<img alt="" src="../images/adminperspective.png" /></li>
+<li>Expand <code>User Management</code>. If you don't see a <code>Users</code> option, then you do not have <code>cluster-admin</code> permissions. If you do see it, click on it, and then click on your user name:<br />
+<img alt="" src="../images/users.png" /></li>
+<li>Click on <code>RoleBindings</code> and check if any binding has a <code>Role ref</code> of <code>cluster-admin</code>. If there are none, then you do not have <code>cluster-admin</code> permissions.<br />
+<img alt="" src="../images/clusteradmin.png" /></li>
+</ol>
+</details>
+<h3 id="step-1-install-example-application_2">Step 1: Install example application</h3>
+<p>If you haven't already, <a href="../lab_liberty_install_app/">install the sample application</a>. If you installed it in a previous lab, you may continue using the previous installation.</p>
+<h3 id="step-2-exercise-long-http-requests_1">Step 2: Exercise long HTTP requests</h3>
+<p>Now you will simulate HTTP requests to Liberty and some of them will be long. This will be done by executing 5 concurrent users that sleep a random amount of time with an average of 5 seconds and a standard deviation of 25 seconds. This means that approximately 68% of requests will be less than 30 seconds, and the remaining will be above 30 seconds, thus simulating long requests.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>
+<p>Request the following web page from your terminal to exercise long requests:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/servlet/LoadRunner?url=http%3A%2F%2Flocalhost%3A9080%2Fservlet%2FSleep%3Fmean%3D5000%26stddev%3D25000&amp;method=get&amp;entity=&amp;concurrentusers=5&amp;totalrequests=100&amp;user=&amp;password="
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/servlet/LoadRunner?url=http%3A%2F%2Flocalhost%3A9080%2Fservlet%2FSleep%3Fmean%3D5000%26stddev%3D25000&amp;method=get&amp;entity=&amp;concurrentusers=5&amp;totalrequests=100&amp;user=&amp;password="
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>Request the following web page from your terminal to check on the status of the run:</p>
+<ol>
+<li>
+<p>macOS, Linux, or Windows with Cygwin:</p>
+<pre><code>curl -k -s "https://$(oc get route libertydiag "--output=jsonpath={.spec.host}")/loadrunner.jsp" | grep 'li&gt;Run'
+</code></pre>
+</li>
+<li>
+<p>Windows with Command Prompt:</p>
+<ol>
+<li>Ensure you have <a href="https://curl.se/windows/"><code>curl</code> for Windows</a> installed</li>
+<li>
+<p>List the application's URL:</p>
+<pre><code>oc get route libertydiag "--output=jsonpath={.spec.host}{'\n'}"
+</code></pre>
+</li>
+<li>
+<p>Execute the following command, replacing <code>$HOST</code> with the output of the previous command:</p>
+<pre><code>curl -k -s "https://$HOST/loadrunner.jsp" | findstr 'li&gt;Run'
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<ol>
+<li>Click on the <code>Load Runner</code> link from the libertydiag application homepage:<br />
+<img alt="" src="../images/loadrunner.png" /></li>
+<li>
+<p>In the <code>Target URL</code>, copy and paste the following:</p>
+<pre><code>http://localhost:9080/servlet/Sleep?mean=5000&amp;stddev=25000
+</code></pre>
+</li>
+<li>
+<p>Scroll to the bottom and click <code>Start</code></p>
+</li>
+</ol>
+</details>
+<h3 id="step-3-execute-the-mustgather">Step 3: Execute the MustGather</h3>
+<p>Now you will execute the MustGather. This takes approximately 6 minutes to run.</p>
+<details>
+<summary>Using the command line</summary>
+<ol>
+<li>Download a helper script:<ol>
+<li>macOS or Linux: <a href="https://github.com/IBM/containerdiag/releases/download/0.1.20230301/containerdiag.sh">containerdiag.sh</a></li>
+<li>Windows: <a href="https://github.com/IBM/containerdiag/releases/download/0.1.20230301/containerdiag.bat">containerdiag.bat</a></li>
+</ol>
+</li>
+<li>Open a <code>Terminal</code> or <code>Command Prompt</code> and change directory to where you downloaded the script</li>
+<li>
+<p>On macOS or Linux, make the script executable:</p>
+<pre><code>chmod +x containerdiag.sh
+</code></pre>
+</li>
+<li>
+<p>On macOS, remove the download quarantine:</p>
+<pre><code>xattr -d com.apple.quarantine containerdiag.sh
+</code></pre>
+</li>
+<li>
+<p>List the current deployments:</p>
+<pre><code>oc get deployments
+</code></pre>
+<p>Example output:</p>
+<pre><code>NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+libertydiag   1/1     1            1           13m
+</code></pre>
+</li>
+<li>
+<p>Execute the MustGather. Normally, the <code>-c</code> option specifying the directory of the javacores is not needed; however, this sample application overrides the default javacore directory using <code>-Xdump</code>. This is common in container deployments so that a directory may be used that's mounted on a permanent disk so that diagnostics are still available if a pod is killed.</p>
+<ol>
+<li>
+<p>macOS or Linux:</p>
+<pre><code>./containerdiag.sh -d libertydiag libertyperf.sh -c "/opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore*"
+</code></pre>
+</li>
+<li>
+<p>Windows:</p>
+<pre><code>containerdiag.bat -d libertydiag libertyperf.sh -c "/opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore*"
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>When the MustGather is complete, you will see a repeating message of the form:</p>
+<pre><code>run.sh: Files are ready for download. Download with the following command in another window:
+
+  oc cp [...]
+</code></pre>
+</li>
+<li>
+<p>Open another <code>Terminal</code> or <code>Command Prompt</code> and copy &amp; paste the <code>oc cp</code> line that you saw in the previous step. For example (your command will be different):</p>
+<pre><code>$ oc cp worker4-debug:/tmp/containerdiag.SN9RbwVmfC.tar.gz containerdiag.SN9RbwVmfC.tar.gz --namespace=openshift-debug-node-g8dqbdfx5d
+tar: Removing leading `/' from member names
+</code></pre>
+</li>
+<li>
+<p>Go back to the previous <code>Terminal</code> or <code>Command Prompt</code>, type <code>ok</code>, and press <code>Enter</code> to complete the MustGather:</p>
+<pre><code>After the download is complete, type OK and press ENTER: ok
+[2022-11-08 19:01:03.670923238 UTC] run.sh: Processing finished. Deleting /tmp/containerdiag.SN9RbwVmfC.tar.gz
+[2022-11-08 19:01:03.674236286 UTC] run.sh: finished.
+</code></pre>
+</li>
+<li>
+<p>Expand the <code>containerdiag.*.tar.gz</code> file that you downloaded.</p>
+</li>
+</ol>
+</details>
+<details>
+<summary>Using the browser</summary>
+<p>The MustGather cannot be executed from the browser. You must use the command line steps above.</p>
+</details>
+<h3 id="step-4-analyze-the-thread-dumps">Step 4: Analyze the thread dumps</h3>
+<p>If you are familiar with analyzing thread dumps, you may skip this step.</p>
+<details>
+<summary>Using the TMDA tool</summary>
+<ol>
+<li>Go to <a href="https://www.ibm.com/support/pages/ibm-thread-and-monitor-dump-analyzer-java-tmda">https://www.ibm.com/support/pages/ibm-thread-and-monitor-dump-analyzer-java-tmda</a></li>
+<li>Download the JAR file</li>
+<li>Double click to launch TMDA</li>
+<li>Click File } Open Thread Dumps</li>
+<li>Go to where you expanded <code>containerdiag.*.tar.gz</code> in the previous step } pods } libertydiag<em> } containers } libertydiag } Multi-select all javacore</em>.txt files and click Open</li>
+<li>Multi-select all the thread dumps and click the Compare Threads button<br />
+<img alt="" src="../images/tmdacompare1.png" /></li>
+<li>Expand the left pane of threads. The default sort is by average stack depth for a thread which tends to correlate with activity. Each row is a thread and each column is a thread dump.<br />
+<img alt="" src="../images/tmdacompare2.png" /></li>
+<li>
+<p>Click on a cell to show a thread stack on the right. Explore the various stacks and look for patterns. You should notice two distinct patterns:</p>
+<ol>
+<li>
+<p>Stacks in <code>Thread.sleepImpl</code>. These are the simulated long-running requests.</p>
+<pre><code>at java/lang/Thread.sleepImpl(Native Method)
+at java/lang/Thread.sleep(Thread.java:977)
+at java/lang/Thread.sleep(Thread.java:960)
+at com/example/servlet/Sleep.doSleep(Sleep.java:79) [...]
+</code></pre>
+</li>
+<li>
+<p>Stacks in <code>SocketInputStream.socketRead0</code>. These are the load runner users.</p>
+<pre><code>at java/net/SocketInputStream.socketRead0(Native Method)
+[...]
+at com/example/loadrunner/SimulatedUser.call(SimulatedUser.java:113) [...]
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>With a sufficient number of thread dumps and a persistent pattern of stack tops, this may be used to hypothesize likely causes of slow HTTP requests.</p>
+</li>
+</ol>
+</details>
+<h3 id="summary_2">Summary</h3>
+<p>In summary, this lab demonstrated how to execute the <a href="https://www.ibm.com/support/pages/mustgather-performance-hang-or-high-cpu-issues-websphere-application-server-linux-containers">performance/hang/high CPU MustGather on Linux on Containers</a>, download the diagnostics, and review them in the free <a href="https://www.ibm.com/support/pages/ibm-thread-and-monitor-dump-analyzer-java-tmda">IBM Thread and Monitor Dump Analyzer (TMDA)</a> tool. With a sufficient number of thread dumps and a persistent pattern of stack tops during a time of slow HTTP requests, this data may be used to hypothesize likely causes of slow HTTP requests.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab_liberty_high_cpu/" class="btn btn-neutral float-left" title="High CPU"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_liberty_application_errors/" class="btn btn-neutral float-right" title="Application errors">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab_liberty_high_cpu/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_liberty_application_errors/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

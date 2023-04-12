@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Frequently Asked Questions - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Frequently Asked Questions";
+        var mkdocs_page_input_path = "faq.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Appendix &raquo;</li>
+      <li>Frequently Asked Questions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="frequently-asked-questions-faq">Frequently Asked Questions (FAQ)</h1>
+<h2 id="what-causes-the-error-dial-tcp-lookup-api-on-no-such-host-verify-you-have-provided-the-correct-host-and-port-and-that-the-server-is-currently-running">What causes the error 'dial tcp: lookup api.... on ...: no such host - verify you have provided the correct host and port and that the server is currently running.'</h2>
+<p>Internal test clusters may not publish their API endpoints to DNS. Replace the host name in the login command with the IP address of the API endpoint provided by your cluster administrator; for example, replace the following</p>
+<pre><code>oc login --token=... --server=https://api...
+</code></pre>
+<p>With:</p>
+<pre><code>oc login --token=... --server=https://10.20.30...
+</code></pre>
+<h2 id="what-causes-the-error-the-server-uses-a-certificate-signed-by-unknown-authority-you-may-need-to-use-the-certificate-authority-flag-to-provide-the-path-to-a-certificate-file-for-the-certificate-authority-or-insecure-skip-tls-verify-to-bypass-the-certificate-check-and-use-insecure-connections">What causes the error 'The server uses a certificate signed by unknown authority. You may need to use the --certificate-authority flag to provide the path to a certificate file for the certificate authority, or --insecure-skip-tls-verify to bypass the certificate check and use insecure connections.'?</h2>
+<p>Internal test clusters may have self-signed certificates. Add <code>--insecure-skip-tls-verify</code> to the login command; for example:</p>
+<pre><code>oc login --insecure-skip-tls-verify --token=... --server=...
+</code></pre>
+<h2 id="what-causes-the-x509-kube-apiserver-lb-signer-certificate-is-not-trusted-error">What causes the 'x509: “kube-apiserver-lb-signer” certificate is not trusted' error?</h2>
+<p>This is a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2097830">known issue on macOS</a> so upgrade your <code>oc</code> client:</p>
+<ol>
+<li>
+<p><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-mac.tar.gz">macOS on Intel</a></p>
+<ul>
+<li>On macOS, you may need to remove the download quarantine before extracting the file. Open <code>Terminal</code>, change directory to where you downloaded the file and run:<pre><code>xattr -d com.apple.quarantine openshift*
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-mac-arm64.tar.gz">macOS on ARM/AArch</a></p>
+<ul>
+<li>On macOS, you may need to remove the download quarantine before extracting the file. Open <code>Terminal</code>, change directory to where you downloaded the file and run:<pre><code>xattr -d com.apple.quarantine openshift*
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="what-causes-the-error-cannot-be-opened-because-the-developer-cannot-be-verified">What causes the error "cannot be opened because the developer cannot be verified"?</h2>
+<p>Executables you download from the internet such as <code>oc</code>, <code>containerdiag.sh</code>, etc. may fail to run on macOS with this error. To resolve it, open a <code>Terminal</code>, change directory to where the executable is and run the following command, replacing <code>$FILE</code> with the executable name:</p>
+<pre><code class="language-shell">xattr -d com.apple.quarantine $FILE
+</code></pre>
+<h2 id="what-causes-unexpected-eof-during-oc-cp">What causes <code>unexpected EOF</code> during <code>oc cp</code>?</h2>
+<p>This is an undiagnosed, transient error. Please simply retry. If it happens often, we'll need to debug it.</p>
+<h2 id="what-causes-oc-get-route-spechost-to-return-a-truncated-url">What causes <code>oc get route [...] .spec.host</code> to return a truncated URL?</h2>
+<p>This is an undiagnosed, transient error. Re-run. The URL should end with <code>/</code>.</p>
+<h2 id="what-causes-must-specify-one-of-f-and-k-and-error-unknown-command-token-prometheus-k8s">What causes <code>must specify one of -f and -k</code> and <code>error: unknown command "token prometheus-k8s"</code>?</h2>
+<p>The command <code>oc create token prometheus-k8s</code> is a new command in recent versions of <code>oc</code> so upgrade your <code>oc</code> client:</p>
+<ol>
+<li>
+<p><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-mac.tar.gz">macOS on Intel</a></p>
+<ul>
+<li>On macOS, you may need to remove the download quarantine before extracting the file. Open <code>Terminal</code>, change directory to where you downloaded the file and run:<pre><code>xattr -d com.apple.quarantine openshift*
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-mac-arm64.tar.gz">macOS on ARM/AArch</a></p>
+<ul>
+<li>On macOS, you may need to remove the download quarantine before extracting the file. Open <code>Terminal</code>, change directory to where you downloaded the file and run:<pre><code>xattr -d com.apple.quarantine openshift*
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../appendix/" class="btn btn-neutral float-left" title="End of labs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lab_liberty_install_app/" class="btn btn-neutral float-right" title="Install Sample Liberty Application">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../appendix/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lab_liberty_install_app/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

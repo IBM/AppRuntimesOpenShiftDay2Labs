@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Accessing OpenShift through the command line - App Runtimes OpenShift Labs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Accessing OpenShift through the command line";
+        var mkdocs_page_input_path = "openshift_login_commandline.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]--> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> App Runtimes OpenShift Labs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">OpenShift Fundamentals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_containers/">Kubernetes basics</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">WebSphere Liberty on OpenShift</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_applogs/">Application logs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_diagnostic_trace/">Diagnostic trace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_cpu/">High CPU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_high_http_response_times/">High response times</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_application_errors/">Application errors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_java_oome/">Java OutOfMemoryErrors</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_instanton/">InstantOn</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">General OpenShift Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_basics_openshift_health/">Health of the cluster</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_pipelines/">Pipelines</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../appendix/">End of labs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab_administration/">Lab cluster administration</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">App Runtimes OpenShift Labs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Accessing OpenShift through the command line</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="accessing-openshift-through-the-command-line">Accessing OpenShift through the command line</h1>
+<ol>
+<li>
+<p>Download the OpenShift terminal client (<code>oc</code> executable) to your workstation. <strong>Note:</strong> Some commands require a recent version of <code>oc</code> so re-download if you have an old version.</p>
+<ol>
+<li><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-windows.zip">Windows</a></li>
+<li><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz">Linux</a></li>
+<li>
+<p><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-mac.tar.gz">macOS on Intel</a></p>
+<ul>
+<li>On macOS, you may need to remove the download quarantine before extracting the file. Open <code>Terminal</code>, change directory to where you downloaded the file and run:<pre><code>xattr -d com.apple.quarantine openshift*
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-mac-arm64.tar.gz">macOS on ARM/AArch</a></p>
+<ul>
+<li>On macOS, you may need to remove the download quarantine before extracting the file. Open <code>Terminal</code>, change directory to where you downloaded the file and run:<pre><code>xattr -d com.apple.quarantine openshift*
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>Unzip/extract the <code>openshift-client-*</code> download into some directory</p>
+</li>
+<li>Open a <code>Terminal</code> or <code>Command Prompt</code> application and change directory to where you expanded the <code>openshift-client-*</code> download</li>
+<li>
+<p>Add this directory to your <code>PATH</code> by replacing <code>$OCDIR</code> with this directory:</p>
+<ol>
+<li>
+<p>macOS/Linux:</p>
+<pre><code>export PATH=$OCDIR:$PATH
+</code></pre>
+<p>For example:</p>
+<pre><code>export PATH=${HOME}/Downloads/openshift-client-mac/:$PATH
+</code></pre>
+</li>
+<li>
+<p>Windows Command Prompt:</p>
+<pre><code>set PATH=$OCDIR;%PATH%
+</code></pre>
+<p>For example:</p>
+<pre><code>set PATH=%HOMEPATH%\Downloads\openshift-client-windows\;%PATH%
+</code></pre>
+</li>
+<li>
+<p>Windows Cygwin terminal:</p>
+<pre><code>export PATH=$OCDIR:$PATH
+</code></pre>
+<p>For example:</p>
+<pre><code>export PATH=${HOMEPATH}/Downloads/openshift-client-windows/:$PATH
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>Open your browser to the OpenShift web console at <a href="https://console-openshift-console.$CLUSTER_DOMAIN_NAME/">https://console-openshift-console.$CLUSTER_DOMAIN_NAME/</a></p>
+</li>
+<li>In the top right, click on your name } Copy Login Command } Log-in again } Display Token } Copy the <code>oc login</code> command<br />
+<img alt="" src="../images/ocptoken.png" /></li>
+<li>Paste and run the <code>oc login</code> command in the <code>Terminal</code> or <code>Command Prompt</code> opened in step 3 above.<ol>
+<li>See the <a href="../faq/">Frequently Asked Questions (FAQ)</a> for common login errors.</li>
+</ol>
+</li>
+<li>Run <code>oc whoami</code> to confirm everything works.</li>
+<li>If you have been provided a namespace that you should use, then set your current namespace, replacing <code>$NAMESPACE</code> in the following command:<pre><code>oc config set-context --current --namespace $NAMESPACE
+</code></pre>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/popper.min.js" defer></script>
+      <script src="../js/tippy-bundle.umd.js" defer></script>
+      <script src="../js/clipboard.js" defer></script>
+      <script src="../js/extra.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
