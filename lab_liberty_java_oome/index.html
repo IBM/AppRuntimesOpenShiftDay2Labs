@@ -79,6 +79,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../openshift_login_commandline/">OpenShift command line access</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
@@ -251,7 +253,7 @@ libertydiag-b98748954-mgj64   1/1     Running   0          97s
 </code></pre>
 <p>Example output:</p>
 <pre><code>[...]
-lrwxrwxrwx.  1 1000830000 root 0 Dec  6 17:45 cwd -&gt; /opt/ol/wlp/output/defaultServer
+lrwxrwxrwx.  1 1000830000 root 0 Dec  6 17:45 cwd -&gt; /opt/ibm/wlp/output/defaultServer
 -r--------.  1 1000830000 root 0 Dec  6 17:45 environ
 lrwxrwxrwx.  1 1000830000 root 0 Dec  6 14:57 exe -&gt; /opt/ibm/java/jre/bin/java
 [...]
@@ -259,7 +261,7 @@ lrwxrwxrwx.  1 1000830000 root 0 Dec  6 14:57 exe -&gt; /opt/ibm/java/jre/bin/ja
 </li>
 <li>
 <p>Normally, heapdumps for IBM Java and Semeru will be produced as <code>heapdump*phd</code> files in the <code>cwd</code> directory that you found above:</p>
-<pre><code>ls -l /opt/ol/wlp/output/defaultServer/heapdump*phd
+<pre><code>ls -l /opt/ibm/wlp/output/defaultServer/heapdump*phd
 </code></pre>
 <p>However, in the case of this sample application, this directory is overridden with an <code>-Xdump</code> configuration. You can check JVM configurations by printing the process <code>cmdline</code> and <code>environ</code> files and find the relevant configuration. For example:</p>
 <pre><code>cat /proc/1/cmdline /proc/1/environ
@@ -268,13 +270,13 @@ lrwxrwxrwx.  1 1000830000 root 0 Dec  6 14:57 exe -&gt; /opt/ibm/java/jre/bin/ja
 <pre><code>[...] -Xdump:directory=logs/diagnostics/
 </code></pre>
 <p>Therefore, for this application, heapdumps will go into <code>logs/diagnostics/</code> relative to <code>cwd</code>:</p>
-<pre><code>ls /opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump*phd
+<pre><code>ls /opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump*phd
 </code></pre>
 <p>Example output:</p>
-<pre><code>/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172449.1.0002.phd
-/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172502.1.0005.phd
-/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0008.phd
-/opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0009.phd
+<pre><code>/opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172449.1.0002.phd
+/opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172502.1.0005.phd
+/opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0008.phd
+/opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0009.phd
 </code></pre>
 <p>Note that overridding the <code>-Xdump</code> directory is common in container deployments so that a directory may be used that's mounted on a permanent disk so that diagnostics are still available if a pod is killed.</p>
 </li>
@@ -287,7 +289,7 @@ lrwxrwxrwx.  1 1000830000 root 0 Dec  6 14:57 exe -&gt; /opt/ibm/java/jre/bin/ja
 <li>Download the heaps dumps by replacing <code>$POD</code> with a pod name from above and <code>$DIR</code> with the directory of the heapdumps. Note that <code>oc cp</code> does not support wildcards so the whole directory (or a single file) must be downloaded.<pre><code>oc cp $POD:$DIR .
 </code></pre>
 <p>For example:</p>
-<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/opt/ol/wlp/output/defaultServer/logs/diagnostics .
+<pre><code>oc cp libertydiag-ddf5f95b6-wj6dm:/opt/ibm/wlp/output/defaultServer/logs/diagnostics .
 </code></pre>
 </li>
 </ol>

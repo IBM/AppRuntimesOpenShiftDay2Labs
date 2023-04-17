@@ -79,6 +79,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../openshift_login_commandline/">OpenShift command line access</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_install_app/">Install Sample Liberty Application</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../lab_liberty_uninstall_app/">Uninstall Sample Liberty Application</a>
@@ -301,9 +303,9 @@ libertydiag-596cc64bdd-rdj62   1/1     Running   0          97s
 </li>
 <li>
 <p>Scroll to the top of the output and observe various errors. In particular, the <code>CWWKE0957I</code> message confirms that InstantOn failed to load and that Liberty will load without InstantOn.</p>
-<pre><code>/opt/ol/wlp/bin/server: line 1458: /opt/ol/wlp/output/defaultServer/workarea/checkpoint/restoreTime: Permission denied
-/opt/ol/wlp/bin/server: line 1474: /opt/ol/wlp/output/defaultServer/workarea/checkpoint/.env.properties: Permission denied
-/opt/ol/wlp/bin/server: line 1413: /usr/sbin/criu: Operation not permitted
+<pre><code>/opt/ibm/wlp/bin/server: line 1458: /opt/ibm/wlp/output/defaultServer/workarea/checkpoint/restoreTime: Permission denied
+/opt/ibm/wlp/bin/server: line 1474: /opt/ibm/wlp/output/defaultServer/workarea/checkpoint/.env.properties: Permission denied
+/opt/ibm/wlp/bin/server: line 1413: /usr/sbin/criu: Operation not permitted
 CWWKE0957I: Restoring the checkpoint server process failed. Check the /logs/checkpoint/restore.log log to determine why the checkpoint process was not restored. Launching the server without using the checkpoint image.
 </code></pre>
 </li>
