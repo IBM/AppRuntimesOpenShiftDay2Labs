@@ -215,3 +215,4 @@ Clean-up the resources.
 ### Summary
 
 In summary, this lab demonstrated what to look for if InstantOn fails to load. Most commonly, this means that privileges are missing.
+
