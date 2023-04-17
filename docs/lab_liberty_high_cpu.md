@@ -234,6 +234,10 @@ The pod will be using a lot of CPU, so you will kill the pod. Kubernetes will au
 
         oc delete pod libertydiag-b98748954-mgj64
 
+1. Wait for the replacement pod to come up:
+   
+        oc wait deployment libertydiag --for condition=available --timeout=5m
+
 </details>
 
 <details markdown="1">
@@ -242,6 +246,7 @@ The pod will be using a lot of CPU, so you will kill the pod. Kubernetes will au
 1. In the `Topology` view of the [`Developer` perspective](openshift_perspective.md), click on the `libertydiag` circle, then click the `Resources` tab in the drawer on the right, and then click on the one pod that's running:  
    ![](images/topology_selectpod.png)
 1. In the top right, click Actions } Delete Pod
+1. While the new pod is initializing, there will be a light blue circle around the deployment. Wait until the circle turns into a dark blue, signifying the application is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits.
 
 </details>
 
@@ -458,6 +463,10 @@ The pod will be using a lot of CPU, so you will kill the pod. Kubernetes will au
 
         oc delete pod libertydiag-b98748954-mgj64
 
+1. Wait for the replacement pod to come up:
+   
+        oc wait deployment libertydiag --for condition=available --timeout=5m
+
 </details>
 
 <details markdown="1">
@@ -466,6 +475,7 @@ The pod will be using a lot of CPU, so you will kill the pod. Kubernetes will au
 1. In the `Topology` view of the [`Developer` perspective](openshift_perspective.md), click on the `libertydiag` circle, then click the `Resources` tab in the drawer on the right, and then click on the one pod that's running:  
    ![](images/topology_selectpod.png)
 1. In the top right, click Actions } Delete Pod
+1. While the new pod is initializing, there will be a light blue circle around the deployment. Wait until the circle turns into a dark blue, signifying the application is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits.
 
 </details>
 
