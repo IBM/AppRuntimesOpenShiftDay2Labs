@@ -42,7 +42,8 @@
 1. In the top right, click on your name } Copy Login Command } Log-in again } Display Token } Copy the `oc login` command  
    ![](images/ocptoken.png)
 1. Paste and run the `oc login` command in the `Terminal` or `Command Prompt` opened in step 3 above.
-    1. See the [Frequently Asked Questions (FAQ)](faq.md) for common login errors.
+    1. The most common error is `certificate is not trusted` when using a test cluster. In this case, add `--insecure-skip-tls-verify`.
+    1. See the [Frequently Asked Questions (FAQ)](faq.md) for other common login errors.
 1. Run `oc whoami` to confirm everything works.
 1. If you have been provided a namespace that you should use, then set your current namespace, replacing `$NAMESPACE` in the following command:
 
