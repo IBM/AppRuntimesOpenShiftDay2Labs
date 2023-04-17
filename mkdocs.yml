@@ -21,6 +21,7 @@ nav:
     - 'Frequently Asked Questions': faq.md
     - 'Install Sample Liberty Application': lab_liberty_install_app.md
     - 'Uninstall Sample Liberty Application': lab_liberty_uninstall_app.md
+    - 'OpenShift command line access': openshift_login_commandline.md
     - 'Lab cluster administration': lab_administration.md
 theme:
   name: readthedocs
