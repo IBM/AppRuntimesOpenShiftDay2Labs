@@ -192,9 +192,9 @@ This lab will take approximately 15 minutes.
 
 1. Scroll to the top of the output and observe various errors. In particular, the `CWWKE0957I` message confirms that InstantOn failed to load and that Liberty will load without InstantOn.
 
-        /opt/ol/wlp/bin/server: line 1458: /opt/ol/wlp/output/defaultServer/workarea/checkpoint/restoreTime: Permission denied
-        /opt/ol/wlp/bin/server: line 1474: /opt/ol/wlp/output/defaultServer/workarea/checkpoint/.env.properties: Permission denied
-        /opt/ol/wlp/bin/server: line 1413: /usr/sbin/criu: Operation not permitted
+        /opt/ibm/wlp/bin/server: line 1458: /opt/ibm/wlp/output/defaultServer/workarea/checkpoint/restoreTime: Permission denied
+        /opt/ibm/wlp/bin/server: line 1474: /opt/ibm/wlp/output/defaultServer/workarea/checkpoint/.env.properties: Permission denied
+        /opt/ibm/wlp/bin/server: line 1413: /usr/sbin/criu: Operation not permitted
         CWWKE0957I: Restoring the checkpoint server process failed. Check the /logs/checkpoint/restore.log log to determine why the checkpoint process was not restored. Launching the server without using the checkpoint image.
 
 </details>

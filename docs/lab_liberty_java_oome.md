@@ -136,14 +136,14 @@ Now you will gather the heapdumps and javacores produced by the OOME.
    Example output:
 
         [...]
-        lrwxrwxrwx.  1 1000830000 root 0 Dec  6 17:45 cwd -> /opt/ol/wlp/output/defaultServer
+        lrwxrwxrwx.  1 1000830000 root 0 Dec  6 17:45 cwd -> /opt/ibm/wlp/output/defaultServer
         -r--------.  1 1000830000 root 0 Dec  6 17:45 environ
         lrwxrwxrwx.  1 1000830000 root 0 Dec  6 14:57 exe -> /opt/ibm/java/jre/bin/java
         [...]
 
 1. Normally, heapdumps for IBM Java and Semeru will be produced as `heapdump*phd` files in the `cwd` directory that you found above:
 
-        ls -l /opt/ol/wlp/output/defaultServer/heapdump*phd
+        ls -l /opt/ibm/wlp/output/defaultServer/heapdump*phd
    However, in the case of this sample application, this directory is overridden with an `-Xdump` configuration. You can check JVM configurations by printing the process `cmdline` and `environ` files and find the relevant configuration. For example:
 
         cat /proc/1/cmdline /proc/1/environ
@@ -152,13 +152,13 @@ Now you will gather the heapdumps and javacores produced by the OOME.
         [...] -Xdump:directory=logs/diagnostics/
    Therefore, for this application, heapdumps will go into `logs/diagnostics/` relative to `cwd`:
 
-        ls /opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump*phd
+        ls /opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump*phd
    Example output:
 
-        /opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172449.1.0002.phd
-        /opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172502.1.0005.phd
-        /opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0008.phd
-        /opt/ol/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0009.phd
+        /opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172449.1.0002.phd
+        /opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172502.1.0005.phd
+        /opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0008.phd
+        /opt/ibm/wlp/output/defaultServer/logs/diagnostics/heapdump.20221207.172504.1.0009.phd
    Note that overridding the `-Xdump` directory is common in container deployments so that a directory may be used that's mounted on a permanent disk so that diagnostics are still available if a pod is killed.
 
 </details>
@@ -173,7 +173,7 @@ Now you will gather the heapdumps and javacores produced by the OOME.
         oc cp $POD:$DIR .
    For example:
 
-        oc cp libertydiag-ddf5f95b6-wj6dm:/opt/ol/wlp/output/defaultServer/logs/diagnostics .
+        oc cp libertydiag-ddf5f95b6-wj6dm:/opt/ibm/wlp/output/defaultServer/logs/diagnostics .
 
 </details>
 

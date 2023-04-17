@@ -615,11 +615,11 @@ Now you will execute the MustGather. This takes approximately 6 minutes to run.
 1. Execute the MustGather. Normally, the `-c` option specifying the directory of the javacores is not needed; however, this sample application overrides the default javacore directory using `-Xdump`. This is common in container deployments so that a directory may be used that's mounted on a permanent disk so that diagnostics are still available if a pod is killed.
     1. macOS or Linux:
 
-            ./containerdiag.sh -d libertydiag libertyperf.sh -c "/opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore*"
+            ./containerdiag.sh -d libertydiag libertyperf.sh -c "/opt/ibm/wlp/output/defaultServer/logs/diagnostics/javacore*"
 
     1. Windows:
 
-            containerdiag.bat -d libertydiag libertyperf.sh -c "/opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore*"
+            containerdiag.bat -d libertydiag libertyperf.sh -c "/opt/ibm/wlp/output/defaultServer/logs/diagnostics/javacore*"
        
 1. When the MustGather is complete, you will see a repeating message of the form:
 

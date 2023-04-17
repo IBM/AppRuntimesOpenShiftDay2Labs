@@ -113,7 +113,7 @@ Now you will gather a number of thread dumps.
    Example output:
 
         [...]
-        lrwxrwxrwx.  1 1000830000 root 0 Dec  6 17:45 cwd -> /opt/ol/wlp/output/defaultServer
+        lrwxrwxrwx.  1 1000830000 root 0 Dec  6 17:45 cwd -> /opt/ibm/wlp/output/defaultServer
         -r--------.  1 1000830000 root 0 Dec  6 17:45 environ
         lrwxrwxrwx.  1 1000830000 root 0 Dec  6 14:57 exe -> /opt/ibm/java/jre/bin/java
         [...]
@@ -128,7 +128,7 @@ Now you will gather a number of thread dumps.
 
 1. Normally, thread dumps for IBM Java and Semeru will be produced as `javacore*txt` files in the `cwd` directory that you found above:
 
-        ls -l /opt/ol/wlp/output/defaultServer/javacore*txt
+        ls -l /opt/ibm/wlp/output/defaultServer/javacore*txt
    However, in the case of this sample application, this directory is overridden with an `-Xdump` configuration. You can check JVM configurations by printing the process `cmdline` and `environ` files and find the relevant configuration. For example:
 
         cat /proc/1/cmdline /proc/1/environ
@@ -137,11 +137,11 @@ Now you will gather a number of thread dumps.
         [...] -Xdump:directory=logs/diagnostics/
    Therefore, for this application, javacores will go into `logs/diagnostics/` relative to `cwd`:
 
-        ls /opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore*txt
+        ls /opt/ibm/wlp/output/defaultServer/logs/diagnostics/javacore*txt
    Example output:
 
-        /opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore.20221206.175535.1.0001.txt
-        /opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore.20221206.175626.1.0002.txt
+        /opt/ibm/wlp/output/defaultServer/logs/diagnostics/javacore.20221206.175535.1.0001.txt
+        /opt/ibm/wlp/output/defaultServer/logs/diagnostics/javacore.20221206.175626.1.0002.txt
    Note that overridding the `-Xdump` directory is common in container deployments so that a directory may be used that's mounted on a permanent disk so that diagnostics are still available if a pod is killed.
 
 </details>
@@ -167,7 +167,7 @@ Now you will gather a number of thread dumps.
         oc cp $POD:$DIR .
    For example:
 
-        oc cp libertydiag-ddf5f95b6-wj6dm:/opt/ol/wlp/output/defaultServer/logs/diagnostics .
+        oc cp libertydiag-ddf5f95b6-wj6dm:/opt/ibm/wlp/output/defaultServer/logs/diagnostics .
 
 </details>
 
@@ -372,11 +372,11 @@ Now you will execute the MustGather. This takes approximately 6 minutes to run.
 1. Execute the MustGather. Normally, the `-c` option specifying the directory of the javacores is not needed; however, this sample application overrides the default javacore directory using `-Xdump`. This is common in container deployments so that a directory may be used that's mounted on a permanent disk so that diagnostics are still available if a pod is killed.
     1. macOS or Linux:
 
-            ./containerdiag.sh -d libertydiag libertyperf.sh -c "/opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore*"
+            ./containerdiag.sh -d libertydiag libertyperf.sh -c "/opt/ibm/wlp/output/defaultServer/logs/diagnostics/javacore*"
 
     1. Windows:
 
-            containerdiag.bat -d libertydiag libertyperf.sh -c "/opt/ol/wlp/output/defaultServer/logs/diagnostics/javacore*"
+            containerdiag.bat -d libertydiag libertyperf.sh -c "/opt/ibm/wlp/output/defaultServer/logs/diagnostics/javacore*"
        
 1. When the MustGather is complete, you will see a repeating message of the form:
 
