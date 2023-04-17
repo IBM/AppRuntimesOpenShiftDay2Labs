@@ -1,5 +1,21 @@
 # Frequently Asked Questions (FAQ)
 
+## What causes the error 'error: x509: “kube-apiserver-service-network-signer” certificate is not trusted'?
+
+Internal test clusters may have self-signed certificates. Add `--insecure-skip-tls-verify` to the login command; for example:
+
+```
+oc login --insecure-skip-tls-verify --token=... --server=...
+```
+
+## What causes the error 'The server uses a certificate signed by unknown authority. You may need to use the --certificate-authority flag to provide the path to a certificate file for the certificate authority, or --insecure-skip-tls-verify to bypass the certificate check and use insecure connections.'?
+
+Internal test clusters may have self-signed certificates. Add `--insecure-skip-tls-verify` to the login command; for example:
+
+```
+oc login --insecure-skip-tls-verify --token=... --server=...
+```
+
 ## What causes the error 'dial tcp: lookup api.... on ...: no such host - verify you have provided the correct host and port and that the server is currently running.'
 
 Internal test clusters may not publish their API endpoints to DNS. Replace the host name in the login command with the IP address of the API endpoint provided by your cluster administrator; for example, replace the following
@@ -12,14 +28,6 @@ With:
 
 ```
 oc login --token=... --server=https://10.20.30...
-```
-
-## What causes the error 'The server uses a certificate signed by unknown authority. You may need to use the --certificate-authority flag to provide the path to a certificate file for the certificate authority, or --insecure-skip-tls-verify to bypass the certificate check and use insecure connections.'?
-
-Internal test clusters may have self-signed certificates. Add `--insecure-skip-tls-verify` to the login command; for example:
-
-```
-oc login --insecure-skip-tls-verify --token=... --server=...
 ```
 
 ## What causes the 'x509: “kube-apiserver-lb-signer” certificate is not trusted' error?
