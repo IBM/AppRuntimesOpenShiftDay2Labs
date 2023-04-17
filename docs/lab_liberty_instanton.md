@@ -210,10 +210,6 @@ Clean-up the resources.
 
         oc delete deployment libertydiag
 
-1. Delete the ServiceAccount:
-
-        oc delete serviceaccount privilegedserviceaccount
-
 </details>
 
 ### Summary
