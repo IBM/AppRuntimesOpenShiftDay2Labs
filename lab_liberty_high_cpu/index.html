@@ -348,6 +348,11 @@ libertydiag-b98748954-mgj64   1/1     Running   0          97s
 <pre><code>oc delete pod libertydiag-b98748954-mgj64
 </code></pre>
 </li>
+<li>
+<p>Wait for the replacement pod to come up:</p>
+<pre><code>oc wait deployment libertydiag --for condition=available --timeout=5m
+</code></pre>
+</li>
 </ol>
 </details>
 <details>
@@ -356,6 +361,7 @@ libertydiag-b98748954-mgj64   1/1     Running   0          97s
 <li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on the one pod that's running:<br />
 <img alt="" src="../images/topology_selectpod.png" /></li>
 <li>In the top right, click Actions } Delete Pod</li>
+<li>While the new pod is initializing, there will be a light blue circle around the deployment. Wait until the circle turns into a dark blue, signifying the application is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits.</li>
 </ol>
 </details>
 <h3 id="summary">Summary</h3>
@@ -583,6 +589,11 @@ libertydiag-b98748954-mgj64   1/1     Running   0          97s
 <pre><code>oc delete pod libertydiag-b98748954-mgj64
 </code></pre>
 </li>
+<li>
+<p>Wait for the replacement pod to come up:</p>
+<pre><code>oc wait deployment libertydiag --for condition=available --timeout=5m
+</code></pre>
+</li>
 </ol>
 </details>
 <details>
@@ -591,6 +602,7 @@ libertydiag-b98748954-mgj64   1/1     Running   0          97s
 <li>In the <code>Topology</code> view of the <a href="../openshift_perspective/"><code>Developer</code> perspective</a>, click on the <code>libertydiag</code> circle, then click the <code>Resources</code> tab in the drawer on the right, and then click on the one pod that's running:<br />
 <img alt="" src="../images/topology_selectpod.png" /></li>
 <li>In the top right, click Actions } Delete Pod</li>
+<li>While the new pod is initializing, there will be a light blue circle around the deployment. Wait until the circle turns into a dark blue, signifying the application is ready. This may take up to 2 minutes or more depending on available cluster resources and namespace limits.</li>
 </ol>
 </details>
 <h3 id="summary_1">Summary</h3>
