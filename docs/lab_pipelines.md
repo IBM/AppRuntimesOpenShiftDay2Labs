@@ -80,7 +80,7 @@ For this part of the lab we will use the OpenShift console to create a pipeline 
 
 ### Editing the pipeline
 
-1. Navigate to the details page for the pipeline by clicking on it. Select Actions->Edit Pipeline. This will bring you back tot he pipeline builder screen. 
+1. Navigate to the details page for the pipeline by clicking on it. Select Actions->Edit Pipeline. This will bring you back to the pipeline builder screen. 
 1. Add a new task between the 'Hello' and 'Goobye' tasks by clicking the '+' symbol either to the right of 'Hello' or to the left of 'Goodbye'. Click on the resulting 'Add Task' bubble and add a task for 'failing-task'. 
 1. There should be a red exclamation mark on the newly created task. Hover over it to see what the problem is. 
 1. Before we can save the new pipeline, we have to provide parameters for the 'failing-task' task. Click on the task bubble and a details panel will appear to the right of the screen. In the 'Parameters' section, enter a value for 'appName'. The red exclamation mark should go away, and saving the pipeline is now enabled. 
