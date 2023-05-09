@@ -402,7 +402,7 @@ Now you will execute the MustGather. This takes approximately 6 minutes to run.
 <details markdown="1">
 <summary>Using the browser</summary>
 
-The MustGather cannot be executed from the browser. You must use the command line steps above.browser.
+The MustGather cannot be executed from the browser. You must use the command line steps above.
 
 </details>
 
